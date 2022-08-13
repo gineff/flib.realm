@@ -4,10 +4,10 @@ const aws = async ()=> {
   //const credentials = new AWS.credentials('t84umK9to7GTZ71UzKaNhb','cHfy3YUnHh7hPnNpTwGqFrgbzMxcgwtddiBectrw7Byf');
   const s3 = new AWS.S3({endpoint: ep, apiVersion: '2006-03-01', credentials: {accessKeyId: 't84umK9to7GTZ71UzKaNhb',secretAccessKey: 'cHfy3YUnHh7hPnNpTwGqFrgbzMxcgwtddiBectrw7Byf'}});
   //s3.service.endpoint.hostname == 'awsproxy.example.com'
-  
+
   //const bucketName = 'flib.s3.hb.bizmrg.com';
   //console.log(JSON.stringify(AWS.config));
-  
+
   s3.listBuckets(function(err, data) {
     if (err) {
       console.log("Error", err);
@@ -15,7 +15,7 @@ const aws = async ()=> {
       console.log("Success", JSON.stringify(data.Buckets));
     }
   });
-/*  
+/*
   const  bucket = new AWS.S3({ params: {Bucket: bucketName}, apiVersion: '2006-03-01' });
 //  const bucket = await new AWS.S3({apiVersion: '2006-03-01'}).createBucket({Bucket: bucketName});
   const file = await bucket.getObject({Key: 'list.json'});
@@ -24,7 +24,7 @@ const aws = async ()=> {
 }
 
 exports = function(arg){
-  
+
   /*
     Accessing application's values:
     var x = context.values.get("value_name");
@@ -41,6 +41,6 @@ exports = function(arg){
     Try running in the console below.
   */
   //console.log(context.values.get("gitHubApiKey"))
-  aws();
+  //aws();
   //return {arg: arg};
 };
