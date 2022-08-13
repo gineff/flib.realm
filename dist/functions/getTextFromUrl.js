@@ -3,4 +3,4 @@ const getText = async (url)=> {
   return response.body.text();
 };
 
-export default getText;
+exports = getText;
