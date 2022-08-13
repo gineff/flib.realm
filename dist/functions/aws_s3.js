@@ -41,7 +41,7 @@ exports = function(arg){
     Try running in the console below.
   */
   //console.log(context.values.get("gitHubApiKey"))
-
+  console.log(JSON.context.user);
   //aws();
   //return {arg: arg};
 };

@@ -35,7 +35,7 @@ const checkAddToDb = async (books)=> {
   const idOfBooks =  books.map(el=>el.bid);
   const booksInDb = await collection.find({bid: {$in: idOfBooks}},{bid:1}).toArray();
   const booksIDInDb= booksInDb.map(el=>el.bid);
-  
+
   for(let book of books){
     if(!booksIDInDb.includes(book.bid)){
       console.log("book Not In Db", JSON.stringify(book.title));
@@ -43,25 +43,24 @@ const checkAddToDb = async (books)=> {
       if(bookFromOPDS) collection.insertOne(bookFromOPDS);
     }
   }
-  
+
   return  idOfBooks;
 };
 
 
-
 const getList  = async function(listId) {
 
-  listId = (listId === "w" || listId === "24")? listId : "w"; 
+  listId = (listId === "w" || listId === "24")? listId : "w";
   const libraries = context.services.get("mongodb-atlas").db("flibusta").collection("Libraries");
   const lists = context.services.get("mongodb-atlas").db("flibusta").collection("Lists");
 
-  const text = await getText("http://flibusta.is/stat/"+listId);
+  const text = await getText(`http://${flibustaUrl}/stat/${listId}`);
   const list = await htmlParser(text);
   const booksId = await checkAddToDb(list);
 
   libraries.updateOne({_id:1},{$set:{["list-"+ listId]: booksId }});
   lists.updateOne({_id:`1_${listId}`},{_id:`1_${listId}`, lib_id:1, name: `popular ${listId}`, data: booksId, updatedAt: new Date() }, {upsert: true});
-  
+
 };
 
 exports = getList;
