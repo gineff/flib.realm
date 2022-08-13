@@ -1,0 +1,17 @@
+{
+    "id": "61921a2a8e7fe84da35c2d13",
+    "name": "UpdateWeekListsTrigger",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "0 */6 * * *",
+        "skip_catchup_events": false
+    },
+    "disabled": false,
+    "event_processors": {
+        "FUNCTION": {
+            "config": {
+                "function_name": "UpdateWeekList"
+            }
+        }
+    }
+}

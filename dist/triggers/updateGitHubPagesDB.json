@@ -1,0 +1,17 @@
+{
+    "id": "62f4d1d139113b02411cee8c",
+    "name": "updateGitHubPagesDB",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "5 */1 * * *",
+        "skip_catchup_events": false
+    },
+    "disabled": false,
+    "event_processors": {
+        "FUNCTION": {
+            "config": {
+                "function_name": "updateGitHubPagesDB"
+            }
+        }
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "type": "flexible",
+    "state": "",
+    "development_mode_enabled": false,
+    "service_name": "mongodb-atlas",
+    "last_disabled": 1658746732,
+    "client_max_offline_days": 30,
+    "is_recovery_mode_disabled": false,
+    "permissions": {
+        "rules": {},
+        "defaultRoles": [
+            {
+                "name": "read-only",
+                "applyWhen": {},
+                "read": true,
+                "write": false
+            }
+        ]
+    },
+    "queryable_fields_names": [
+        "bid"
+    ]
+}

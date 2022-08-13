@@ -1,0 +1,101 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "string"
+        },
+        "author": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "object",
+                "properties": {
+                    "id": {
+                        "bsonType": "string"
+                    },
+                    "name": {
+                        "bsonType": "string"
+                    }
+                }
+            }
+        },
+        "bid": {
+            "bsonType": "string"
+        },
+        "comments": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "object",
+                "properties": {
+                    "author": {
+                        "bsonType": "string"
+                    },
+                    "date": {
+                        "bsonType": "string"
+                    },
+                    "mark": {
+                        "bsonType": "string"
+                    },
+                    "text": {
+                        "bsonType": "string"
+                    }
+                }
+            }
+        },
+        "content": {
+            "bsonType": "string"
+        },
+        "downloads": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "object",
+                "properties": {
+                    "href": {
+                        "bsonType": "string"
+                    },
+                    "type": {
+                        "bsonType": "string"
+                    }
+                }
+            }
+        },
+        "genre": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "image": {
+            "bsonType": "string"
+        },
+        "lid": {
+            "bsonType": "int"
+        },
+        "marks": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "recommendation": {
+            "bsonType": "string"
+        },
+        "sequencesId": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "sequencesTitle": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "title": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "_id"
+    ],
+    "title": "Book"
+}

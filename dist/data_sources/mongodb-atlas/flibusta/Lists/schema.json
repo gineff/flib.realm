@@ -1,0 +1,26 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "string"
+        },
+        "data": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "lib_id": {
+            "bsonType": "int"
+        },
+        "name": {
+            "bsonType": "string"
+        },
+        "updatedAt": {
+            "bsonType": "date"
+        }
+    },
+    "required": [
+        "_id"
+    ],
+    "title": "List"
+}

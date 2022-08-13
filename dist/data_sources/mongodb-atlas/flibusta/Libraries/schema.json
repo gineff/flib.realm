@@ -1,0 +1,61 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "int"
+        },
+        "fetchUrl": {
+            "bsonType": "string"
+        },
+        "list-24": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "list-w": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "lists": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "object",
+                "properties": {
+                    "data": {
+                        "bsonType": "array",
+                        "items": {
+                            "bsonType": "string"
+                        }
+                    },
+                    "description": {
+                        "bsonType": "string"
+                    },
+                    "href": {
+                        "bsonType": "string"
+                    },
+                    "id": {
+                        "bsonType": "string"
+                    },
+                    "name": {
+                        "bsonType": "string"
+                    },
+                    "schedule": {
+                        "bsonType": "string"
+                    },
+                    "search": {
+                        "bsonType": "string"
+                    }
+                }
+            }
+        },
+        "name": {
+            "bsonType": "string"
+        },
+        "url": {
+            "bsonType": "string"
+        }
+    },
+    "title": "Library"
+}

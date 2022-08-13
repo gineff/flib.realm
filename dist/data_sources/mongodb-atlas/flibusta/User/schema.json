@@ -1,0 +1,32 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "string"
+        },
+        "authors": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "int"
+            }
+        },
+        "data": {
+            "bsonType": "object",
+            "properties": {
+                "email": {
+                    "bsonType": "string"
+                },
+                "vkId": {
+                    "bsonType": "string"
+                }
+            }
+        },
+        "name": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "_id",
+        "name"
+    ],
+    "title": "User"
+}

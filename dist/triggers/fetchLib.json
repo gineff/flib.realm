@@ -1,0 +1,17 @@
+{
+    "id": "6114b3ff2ec400f6b52cea3b",
+    "name": "fetchLib",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "0 */1 * * *",
+        "skip_catchup_events": false
+    },
+    "disabled": true,
+    "event_processors": {
+        "FUNCTION": {
+            "config": {
+                "function_name": "fetchBooks"
+            }
+        }
+    }
+}
