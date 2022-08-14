@@ -2,8 +2,8 @@
 
 exports = ()=> {
   const {getText, htmlParser, getCollection, getLibraryUrl} =  context.functions.execute("mainFunctions");
-  const Lists = getCollection('flibusta',"Lists");
-  const Books = getCollection('flibusta',"Books");
+  const Lists = context.services.get("mongodb-atlas").db("flibusta").collection("Lists");
+  const Books = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
   let url;
 
   const xmlParser = (text)=> {
