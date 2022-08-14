@@ -48,12 +48,6 @@ const getList  = async function(listId) {
 
   Lists.updateOne({_id:`1_${listId}`},{_id:`1_${listId}`, lib_id:1, name: `popular ${listId}`, data: booksId, updatedAt: new Date() }, {upsert: true});
 
-  /*
-
-    const booksId = await checkAddToDb(list);
-
-    lists.updateOne({_id:`1_${listId}`},{_id:`1_${listId}`, lib_id:1, name: `popular ${listId}`, data: booksId, updatedAt: new Date() }, {upsert: true});
-  */
 };
 
 exports = getList;
