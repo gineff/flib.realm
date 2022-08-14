@@ -1,10 +1,41 @@
+
+///// Parsing
+
 const getText = async (url)=> {
-  const response = await context.http.get({url});
-  return response.body.text();
+  let text;
+  try{
+    const response = await context.http.get({url});
+    text = response.body.text();
+  }catch (e) {
+    text = "";
+  }
+  return text;
 };
 
+const htmlParser = (type, text)=> {
+
+  if(type === "List") {
+    const matches = Array.from(text.matchAll(/<a href="\/a\/(.*?)">(.*?)<\/a> - <a href="\/b\/(.*?)">(.*?)<\/a>/g));
+    return  matches.map(el=>({
+      bid:el[3],
+      author:[{name:el[2], id: el[1]}],
+      title:el[4],
+      sequencesTitle: [],
+    }));
+  }else{
+    return [];
+  }
+
+};
+
+/////// Collections
+
+const getCollection = (db,name)=> {
+  return context.services.get("mongodb-atlas").db(db).collection(name);
+}
+
 const getLibrary = async (query) => {
-  const libraries = context.services.get("mongodb-atlas").db("flibusta").collection("Libraries");
+  const libraries = getCollection("flibusta", "Libraries");
   let library;
   try{
     library = await libraries.findOne(query);
@@ -15,9 +46,18 @@ const getLibrary = async (query) => {
 }
 
 const checkLibrarySiteStatus = async (query)=> {
-  const library = await context.functions.execute("getLibrary", query);
+  const library = await getLibrary(query);
   if(!library) return 4// mongodb is unavailable
-  return library.status; //1 site is available; 2 reserve site is available; 3 site is unavailable
+  return library.status;
+  // 1 site is available;
+  // 2 reserve site is available;
+  // 3 site is unavailable;
+  // false mongodb unavailable
 }
 
-exports = ()=>{return {getText, getLibrary, checkLibrarySiteStatus}}
+const getLibraryUrl = async (query)=> {
+  const { url } = await getLibrary(query);
+  return url;
+}
+
+exports = ()=>{return {getText, htmlParser, getLibrary, checkLibrarySiteStatus, getLibraryUrl}}
