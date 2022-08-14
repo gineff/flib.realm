@@ -49,7 +49,7 @@ exports = ()=> {
     const list = htmlParser("List", text);
     const booksId = await checkAddToDb(list);
 
-    Lists.updateOne({_id:`1_${listId}`},{_id:`1_${listId}`, lib_id:1, name: `popular ${listId}`, data: booksId, updatedAt: new Date() }, {upsert: true});
+    Array.isArray(booksId) && booksId.length > 0 && Lists.updateOne({_id:`1_${listId}`},{_id:`1_${listId}`, lib_id:1, name: `popular ${listId}`, data: booksId, updatedAt: new Date() }, {upsert: true});
 
   };
 
