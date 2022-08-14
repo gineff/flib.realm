@@ -1,0 +1,5 @@
+{
+    "name": "AWS_AccessKeyID",
+    "value": "AWS_AccessKeyID",
+    "from_secret": true
+}

@@ -1,23 +1,13 @@
 [
     {
-        "name": "checkLibrarySiteStatus",
-        "private": false,
+        "name": "xmlParserFlibusta",
+        "private": true,
+        "run_as_system": true,
         "disable_arg_logs": true
     },
     {
-        "name": "getSaveFile",
-        "private": false,
-        "run_as_system": true
-    },
-    {
-        "name": "UpdateComentsNRating",
-        "private": false,
-        "run_as_system": true
-    },
-    {
-        "name": "aws_s3",
-        "private": false,
-        "disable_arg_logs": true
+        "name": "AWS_S3_Upload",
+        "private": true
     },
     {
         "name": "getBooksFromList",
@@ -30,42 +20,13 @@
         "run_as_system": true
     },
     {
-        "name": "xmlParserFlibusta",
-        "private": true,
-        "run_as_system": true,
-        "disable_arg_logs": true
-    },
-    {
-        "name": "getBooksFromList1",
-        "private": false,
-        "run_as_system": true
-    },
-    {
-        "name": "mainFunctions",
-        "private": false,
-        "disable_arg_logs": true
-    },
-    {
         "name": "updateGitHubPagesDB",
         "private": true
     },
     {
-        "name": "getLibrary",
+        "name": "UpdateComentsNRating",
         "private": false,
-        "disable_arg_logs": true
-    },
-    {
-        "name": "UpdateWeekList",
-        "private": true
-    },
-    {
-        "name": "Update24HourLists",
-        "private": true
-    },
-    {
-        "name": "getText",
-        "private": false,
-        "disable_arg_logs": true
+        "run_as_system": true
     },
     {
         "name": "fetchBooks",
@@ -73,7 +34,21 @@
         "can_evaluate": {}
     },
     {
-        "name": "AWS_S3_Upload",
+        "name": "Update24HourLists",
         "private": true
+    },
+    {
+        "name": "UpdateWeekList",
+        "private": true
+    },
+    {
+        "name": "mainFunctions",
+        "private": false,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "getSaveFile",
+        "private": false,
+        "run_as_system": true
     }
 ]
