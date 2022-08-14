@@ -1,3 +1,11 @@
+const aws = async ()=> {
+  const AWS = require('aws-sdk');
+  const ep = new AWS.Endpoint('hb.bizmrg.com');
+  const credentials = {accessKeyId: context.values.getValue("accessKeyId"), secretAccessKey: 'cHfy3YUnHh7hPnNpTwGqFrgbzMxcgwtddiBectrw7Byf'};
+  const s3 = new AWS.S3({endpoint: ep, apiVersion: '2006-03-01', credentials});
+
+}
+
 exports = function(changeEvent) {
   /*
     A Database Trigger will always call a function with a changeEvent.
