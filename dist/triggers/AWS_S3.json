@@ -1,0 +1,27 @@
+{
+    "id": "62f8bf722809fed5cd65235a",
+    "name": "AWS_S3",
+    "type": "DATABASE",
+    "config": {
+        "operation_types": [
+            "INSERT"
+        ],
+        "database": "flibusta",
+        "collection": "Books",
+        "service_name": "mongodb-atlas",
+        "match": {},
+        "project": {},
+        "full_document": true,
+        "full_document_before_change": false,
+        "unordered": false,
+        "skip_catchup_events": true
+    },
+    "disabled": true,
+    "event_processors": {
+        "FUNCTION": {
+            "config": {
+                "function_name": "AWS_S3_Upload"
+            }
+        }
+    }
+}
