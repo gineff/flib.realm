@@ -1,6 +1,9 @@
 
 
 const getList  = async function(listId) {
+
+  const {getText} =  context.functions.execute("mainFunctions");
+  console.log(await getText("http://flibusta.is"));
 /*
   listId = (listId === "w" || listId === "24")? listId : "w";
   const lists = context.services.get("mongodb-atlas").db("flibusta").collection("Lists");
