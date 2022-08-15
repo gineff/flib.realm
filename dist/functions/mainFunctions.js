@@ -64,8 +64,13 @@ const checkLibrarySiteStatus = async (query)=> {
   // false mongodb unavailable
 }
 
+const checkResourceIsAvailable = (url)=> {
+
+}
+
 const getLibraryUrl = async (query)=> {
   const { url } = await getLibrary(query);
+
   return url;
 }
 

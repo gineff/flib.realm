@@ -1,5 +1,5 @@
 node_modules
 apikey
-test.mjs
-test.js
-index.html
+./test.mjs
+./test.js
+./index.html
