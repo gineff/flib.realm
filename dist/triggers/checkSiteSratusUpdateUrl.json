@@ -1,16 +1,16 @@
 {
-    "id": "62f4d1d139113b02411cee8c",
-    "name": "updateGitHubPagesDB",
+    "id": "62fac36f901793918abf61e2",
+    "name": "checkSiteSratusUpdateUrl",
     "type": "SCHEDULED",
     "config": {
-        "schedule": "5 */1 * * *",
+        "schedule": "57 */1 * * *",
         "skip_catchup_events": false
     },
-    "disabled": true,
+    "disabled": false,
     "event_processors": {
         "FUNCTION": {
             "config": {
-                "function_name": "updateGitHubPagesDB"
+                "function_name": "updateLibraryUrl"
             }
         }
     }
