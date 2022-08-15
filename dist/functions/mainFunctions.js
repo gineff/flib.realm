@@ -12,6 +12,15 @@ const getText = async (url)=> {
   return text;
 };
 
+const getOpds = async (url)=> {
+  const response = await context.http.get({url});
+  return response.body.text();
+};
+
+const xmlParser = (text)=> {
+  return context.functions.execute("xmlParserFlibusta", text);
+};
+
 const htmlParser = (type, text)=> {
 
   if(type === "List") {
@@ -61,4 +70,4 @@ const getLibraryUrl = async (query)=> {
 }
 
 
-exports = ()=>{return {getText, htmlParser, getLibrary, checkLibrarySiteStatus, getLibraryUrl}}
+exports = ()=>{return {getText, getOpds, xmlParser, htmlParser, getLibrary, checkLibrarySiteStatus, getLibraryUrl}}

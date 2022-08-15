@@ -1,14 +1,12 @@
 
 
 exports = ()=> {
-  const {getText, htmlParser, getCollection, getLibraryUrl} =  context.functions.execute("mainFunctions");
+  const {getText, htmlParser, xmlParser, getLibraryUrl} =  context.functions.execute("mainFunctions");
   const Lists = context.services.get("mongodb-atlas").db("flibusta").collection("Lists");
   const Books = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
   let url;
 
-  const xmlParser = (text)=> {
-    return context.functions.execute("xmlParserFlibusta", text);
-  };
+
 
   const checkAddToDb = async (books)=> {
 

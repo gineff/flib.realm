@@ -41,7 +41,7 @@ const xmlToJson = function(xml) {
             book.downloads.push({href: href, type});
           }else if(rel === 'alternate'){
             book.bid = href.split("/").pop();
-            book._id="1-"+book.bid; 
+            book.lb_index="1-"+book.bid
             book.lid = 1;
             book.date = now;
           }
