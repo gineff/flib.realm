@@ -7,6 +7,11 @@ const aws = async ()=> {
 }
 
 exports = function(changeEvent) {
+
+  context.http.get("flibusta.site/i/44/680744/img_0.jpeg")
+  console.log()
+  // /books
+  // /images small big
   /*
     A Database Trigger will always call a function with a changeEvent.
     Documentation on ChangeEvents: https://docs.mongodb.com/manual/reference/change-events/
