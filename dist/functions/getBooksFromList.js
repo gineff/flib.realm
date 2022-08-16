@@ -7,7 +7,7 @@ exports = () => {
   const checkAddToDb = async books => {
 
     const idOfBooks =  books.map(el=>el.bid);
-    const booksInDb = await Books.find({bid: {$in: idOfBooks}},{bid:1}).toArray();
+    const booksInDb = await Books.find({id: 1, bid: {$in: idOfBooks}},{bid:1}).toArray();
     const booksIDInDb= booksInDb.map(el=>el.bid);
     const basket = [];
 
@@ -18,7 +18,7 @@ exports = () => {
         if(bookFromOPDS) basket.push(bookFromOPDS);
       }
     }
-    await Books.insertMany(basket)
+    basket.length && await Books.insertMany(basket);
     return  idOfBooks;
   };
 
@@ -43,8 +43,17 @@ exports = () => {
     const text = await getText(`http://${url}/stat/${listId}`);
     const list = htmlParser("List", text);
     const booksId = await checkAddToDb(list);
+    const books_id = Array.isArray(booksId) && booksId.length &&
+      (Array.from(await Books.find({lid:1, bid:{$in: booksId}},{_id: 1}))).map(el=> el._id)
 
-    Array.isArray(booksId) && booksId.length > 0 && Lists.updateOne({_id:`1_${listId}`},{_id:`1_${listId}`, lib_id:1, name: `popular ${listId}`, data: booksId, updatedAt: new Date() }, {upsert: true});
+    Array.isArray(books_id) && books_id.length > 0 &&
+    Lists.updateOne({_id:`1_${listId}`},
+      {_id:`1_${listId}`,
+        lib_id:1,
+        name: `popular ${listId}`,
+        data: books_id,
+        updatedAt: new Date()},
+      {upsert: true});
 
   };
 
