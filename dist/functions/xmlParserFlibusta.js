@@ -1,5 +1,6 @@
 const xmlToJson = function(xml) {
 
+  const matchAll = require("string.prototype.matchall");
   if(typeof xml === "string") {
   const { DOMParser } = require('xmldom')
     xml = new DOMParser().parseFromString(xml, "application/xml");
@@ -19,7 +20,7 @@ const xmlToJson = function(xml) {
           book.title = el.textContent;
         }else if(el.nodeName === 'content') {
           book.content = el.textContent;
-          let res =  Array.from( book.content.matchAll(/Серия: (.*?)<br\/>/g));
+          let res =  Array.from( matchAll(book.content, /Серия: (.*?)<br\/>/g));
           book.sequencesTitle = res.map(el=>el[1]);
         }else if(el.nodeName === 'author') {
           let author = {};
