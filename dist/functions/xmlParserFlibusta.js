@@ -42,7 +42,7 @@ const xmlToJson = function(xml) {
             book.downloads.push({href: href, type});
           }else if(rel === 'alternate'){
             book.bid = href.split("/").pop();
-            book.lb_index="1-"+book.bid
+            book.s3 = false;
             book.lid = 1;
             book.date = now;
           }
