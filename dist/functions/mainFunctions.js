@@ -26,7 +26,7 @@ const xmlParser = (text)=> {
 const htmlParser = (type, text)=> {
   const matchAll = require("string.prototype.matchall");
   if(type === "List") {
-    const matches = Array.from(text.matchAll(/<a href="\/a\/(.*?)">(.*?)<\/a> - <a href="\/b\/(.*?)">(.*?)<\/a>/g));
+    const matches = Array.from(matchAll(text, /<a href="\/a\/(.*?)">(.*?)<\/a> - <a href="\/b\/(.*?)">(.*?)<\/a>/g));
     return  matches.map(el=>({
       bid:el[3],
       author:[{name:el[2], id: el[1]}],
