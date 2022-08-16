@@ -1,5 +1,9 @@
 [
     {
+        "name": "UpdateWeekList",
+        "private": true
+    },
+    {
         "name": "test",
         "private": false,
         "disable_arg_logs": true
@@ -9,9 +13,18 @@
         "private": true
     },
     {
-        "name": "getSaveFile",
+        "name": "UpdateComentsNRating",
         "private": false,
         "run_as_system": true
+    },
+    {
+        "name": "mainFunctions",
+        "private": false,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "updateLibraryUrl",
+        "private": true
     },
     {
         "name": "xmlParserFlibusta",
@@ -20,12 +33,7 @@
         "disable_arg_logs": true
     },
     {
-        "name": "UpdateComentsNRating",
-        "private": false,
-        "run_as_system": true
-    },
-    {
-        "name": "UpdateWeekList",
+        "name": "Update24HourLists",
         "private": true
     },
     {
@@ -34,22 +42,9 @@
         "run_as_system": true
     },
     {
-        "name": "Update24HourLists",
-        "private": true
-    },
-    {
-        "name": "getBooksFromList",
-        "private": true,
-        "can_evaluate": {}
-    },
-    {
-        "name": "mainFunctions",
+        "name": "getSaveFile",
         "private": false,
-        "disable_arg_logs": true
-    },
-    {
-        "name": "updateGitHubPagesDB",
-        "private": true
+        "run_as_system": true
     },
     {
         "name": "fetchBooks",
@@ -57,7 +52,12 @@
         "can_evaluate": {}
     },
     {
-        "name": "updateLibraryUrl",
+        "name": "getBooksFromList",
+        "private": true,
+        "can_evaluate": {}
+    },
+    {
+        "name": "updateGitHubPagesDB",
         "private": true
     }
 ]
