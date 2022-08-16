@@ -19,7 +19,7 @@ exports = async (id)=> {
     }
   }
 
-  const url = (results[0] <= results[1])? arr[0] : arr[1];
+  const url = (results[0] < results[1])? arr[0] : arr[1];
   console.log(url, JSON.stringify(results));
   try{
     await Libraries.updateOne({_id:id},{$set:{url}})
