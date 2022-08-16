@@ -5,7 +5,7 @@ exports = async ()=> {
 
   const fetchBooks = async (lib, page)=> {
 
-    const fetchUrl = lib.url+lib.fetchUrl.replace("$page", page);
+    const fetchUrl = "http://"+lib.url+lib.fetchUrl.replace("$page", page);
     const xml = await getText(fetchUrl);
     return xmlParser(xml);
 
@@ -17,7 +17,7 @@ exports = async ()=> {
     const books = await fetchBooks(await getLibrary({_id: 1}), page);
 
     try{
-      await Books.insertMany(books, {ordered: false}).toArray();
+      await Books.insertMany(books, {ordered: false});
     }catch (e) {
       console.log(JSON.stringify(e));
       break;
