@@ -2,17 +2,7 @@
 ///// Parsing
 
 const getText = async (url)=> {
-  const axios = require('axios').default;
-  let text;
-  try{
-    const response = await axios.get(url, {timeout: 30000, responseType: "text"});
-    text = response.data;
-    //const response = await context.http.get({url});
-    //text = response.body.text();
-  }catch (e) {
-    text = "";
-  }
-  return text;
+  return await context.http.get({url}) || "text"
 };
 
 const getOpds = async (url)=> {

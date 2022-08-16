@@ -9,15 +9,17 @@ exports = () => {
     const idOfBooks =  books.map(el=>el.bid);
     const booksInDb = await Books.find({bid: {$in: idOfBooks}},{bid:1}).toArray();
     const booksIDInDb= booksInDb.map(el=>el.bid);
+    const basket = [];
 
     for(let book of books){
       if(!booksIDInDb.includes(book.bid)){
         console.log("book Not In Db", JSON.stringify(book.title));
         const bookFromOPDS = await searchBookByAuthor(book);
-        if(bookFromOPDS) Books.insertOne(bookFromOPDS);
+        if(bookFromOPDS) buscket.push(bookFromOPDS);
+        //if(bookFromOPDS) Books.insertOne(bookFromOPDS);
       }
     }
-
+    await Books.insertMany(basket)
     return  idOfBooks;
   };
 
