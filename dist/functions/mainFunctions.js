@@ -2,7 +2,7 @@
 ///// Parsing
 
 const getText = async (url)=> {
-  return await context.http.get({url}) || "text"
+  return (await context.http.get({url})).body.text() || ""
 };
 
 const getOpds = async (url)=> {

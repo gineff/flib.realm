@@ -15,8 +15,7 @@ exports = () => {
       if(!booksIDInDb.includes(book.bid)){
         console.log("book Not In Db", JSON.stringify(book.title));
         const bookFromOPDS = await searchBookByAuthor(book);
-        if(bookFromOPDS) buscket.push(bookFromOPDS);
-        //if(bookFromOPDS) Books.insertOne(bookFromOPDS);
+        if(bookFromOPDS) basket.push(bookFromOPDS);
       }
     }
     await Books.insertMany(basket)
