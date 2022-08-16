@@ -1,4 +1,4 @@
-exports = async function() {
+exports = async ()=> {
 
   const {getOpds, xmlParser,  getLibrary} =  context.functions.execute("mainFunctions");
   const Books = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
@@ -6,24 +6,15 @@ exports = async function() {
   const fetchBooks = async (lib)=> {
 
     const fetchUrl = lib.url+lib.fetchUrl.replace("$page");
-    const now = new Date();
     const xml = await getOpds(fetchUrl);
-    const books = xmlParser(xml);
-    return books.map(el=>({...el, _id: ObjectId(), lid : lib._id, date: now}))
+    return xmlParser(xml);
 
   }
 
   const arr = new Array(10).fill(0);
 
   for (let key of arr) {
-    const books = await  fetchBooks(await getLibrary({_id: 1}));
-    for (let book of books) {
-      try{
-        //Books.insertMany()
-      }catch (e) {
-
-      }
-    }
+    const books = await fetchBooks(await getLibrary({_id: 1}));
+    Books.insertMany(books);
   }
-
 };

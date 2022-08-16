@@ -2,17 +2,17 @@ exports = async (id)=> {
   id = (Number.isInteger(id) && id>0)? id : 1;
   const {getOpds, getLibrary} =  context.functions.execute("mainFunctions");
   const Libraries = context.services.get("mongodb-atlas").db("flibusta").collection("Libraries");
-  
+
   const axios = require("axios").default;
   const start = new Date();
   const lib = await getLibrary({_id:id});
   const arr = [lib.mainUrl,lib.reserveUrl];
   let results = [];
-  
+
   for(let url of arr){
     console.log(`http://${url}/opds?date=${start.getTime()}`);
     try{
-      const res = await axios.get(`http://${url}/opds?date=${start.getTime()}`);
+      const res = await axios.get(`http://${url}/opds}`,{timeout:60000});
       results.push((new Date()- start));
     }catch (e) {
       results.push(60000);
@@ -26,6 +26,6 @@ exports = async (id)=> {
   }catch(e){
     console.log(e,JSON>stringify(e));
   }
-  
+
 
 }

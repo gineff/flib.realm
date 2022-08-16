@@ -1,14 +1,10 @@
-
-
-exports = ()=> {
+exports = () => {
   const {getText, htmlParser, xmlParser, getLibraryUrl} =  context.functions.execute("mainFunctions");
   const Lists = context.services.get("mongodb-atlas").db("flibusta").collection("Lists");
   const Books = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
   let url;
 
-
-
-  const checkAddToDb = async (books)=> {
+  const checkAddToDb = async books => {
 
     const idOfBooks =  books.map(el=>el.bid);
     const booksInDb = await Books.find({bid: {$in: idOfBooks}},{bid:1}).toArray();
