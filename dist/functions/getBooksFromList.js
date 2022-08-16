@@ -40,7 +40,6 @@ exports = () => {
 
     url = await getLibraryUrl({_id: 1})
     const text = await getText(`http://${url}/stat/${listId}`);
-    console.log("text", text);
     const list = htmlParser("List", text);
     const booksId = await checkAddToDb(list);
 

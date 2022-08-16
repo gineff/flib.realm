@@ -9,23 +9,16 @@ exports = async (id)=> {
   const arr = [lib.mainUrl,lib.reserveUrl];
   let results = [];
 
+
+
   for(let url of arr){
     console.log(`http://${url}/opds?date=${start.getTime()}`);
-    try{
-      const res = await axios.get(`http://${url}/opds}`,{timeout:60000});
-      results.push((new Date()- start));
-    }catch (e) {
-      results.push(60000);
-    }
+    const res = await axios.get(`http://flibusta.site/opds`,{timeout:20000,responseType:"text"});
+    results.push(res.data? (new Date()- start) : 60000)
   }
 
   const url = (results[0] < results[1])? arr[0] : arr[1];
   console.log(url, JSON.stringify(results));
-  try{
-    await Libraries.updateOne({_id:id},{$set:{url}})
-  }catch(e){
-    console.log(e,JSON>stringify(e));
-  }
-
+  Libraries.updateOne({_id:id},{$set:{url}})
 
 }
