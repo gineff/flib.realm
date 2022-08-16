@@ -24,7 +24,7 @@ const xmlParser = (text)=> {
 };
 
 const htmlParser = (type, text)=> {
-
+  const matchAll = require("string.prototype.matchall");
   if(type === "List") {
     const matches = Array.from(text.matchAll(/<a href="\/a\/(.*?)">(.*?)<\/a> - <a href="\/b\/(.*?)">(.*?)<\/a>/g));
     return  matches.map(el=>({
