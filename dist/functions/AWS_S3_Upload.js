@@ -7,12 +7,14 @@ const aws = async ()=> {
 }
 
 exports = function(changeEvent) {
+  const axios = require("axios").default;
 
   //context.http.get("flibusta.site/i/44/680744/img_0.jpeg")
   const {documentKey, fullDocument, updateDescription} = changeEvent;
   console.log("documentKey", JSON.stringify(documentKey));
   console.log("fullDocument", JSON.stringify(fullDocument));
   console.log("updateDescription", JSON.stringify(updateDescription));
+
 
   // /books
   // /images small big
