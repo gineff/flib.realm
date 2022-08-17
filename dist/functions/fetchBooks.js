@@ -15,7 +15,7 @@ exports = async ()=> {
 
   for (let page of arr) {
     const books = await fetchBooks(await getLibrary({_id: 1}), page);
-
+    console.log(page, books.length)
     try{
       await Books.insertMany(books, {ordered: false});
     }catch (e) {
