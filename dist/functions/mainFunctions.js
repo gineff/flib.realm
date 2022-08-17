@@ -37,9 +37,9 @@ const getCollection = async (db,name)=> {
 }
 
 const getLibrary = async (query) => {
-  const libraries = await getCollection("flibusta", "Libraries");
+  const libraries = getCollection("flibusta", "Libraries");
   try{
-    return  libraries.findOne(query);
+    return  await libraries.findOne(query);
   }catch (e) {
     return false;
   }
