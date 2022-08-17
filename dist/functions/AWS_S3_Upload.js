@@ -4,9 +4,9 @@ exports = async function(changeEvent) {
   const {aws} =  context.functions.execute("mainFunctions");
 
   const {fullDocument} = changeEvent;
-  const {data} = fullDocument;
+  const {_id,data} = fullDocument;
   const s3 = await aws();
-  const params = {Bucket: "flib.s3", Key: "lists/1_w.json", Content: "application/json", Body: JSON.stringify(data)};
+  const params = {Bucket: "flib.s3", Key: `lists/${_id}.json`, Content: "application/json", Body: JSON.stringify(data)};
 
   s3.upload (params, function (err, data) {
     if (err) {
