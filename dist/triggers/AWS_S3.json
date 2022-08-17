@@ -5,7 +5,8 @@
     "config": {
         "operation_types": [
             "INSERT",
-            "UPDATE"
+            "UPDATE",
+            "REPLACE"
         ],
         "database": "flibusta",
         "collection": "Lists",
