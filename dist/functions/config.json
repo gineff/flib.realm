@@ -1,26 +1,16 @@
 [
     {
-        "name": "test",
-        "private": false,
-        "disable_arg_logs": true
-    },
-    {
         "name": "updateGitHubPagesDB",
         "private": true
     },
     {
-        "name": "xmlParserFlibusta",
+        "name": "UpdateWeekList",
+        "private": true
+    },
+    {
+        "name": "fetchBooks",
         "private": true,
-        "run_as_system": true,
-        "disable_arg_logs": true
-    },
-    {
-        "name": "updateLibraryUrl",
-        "private": true
-    },
-    {
-        "name": "Update24HourLists",
-        "private": true
+        "can_evaluate": {}
     },
     {
         "name": "getRatingNComments",
@@ -28,18 +18,15 @@
         "run_as_system": true
     },
     {
-        "name": "mainFunctions",
+        "name": "getSaveFile",
         "private": false,
-        "disable_arg_logs": true
+        "run_as_system": true
     },
     {
-        "name": "UpdateWeekList",
-        "private": true
-    },
-    {
-        "name": "getBooksFromList",
+        "name": "xmlParserFlibusta",
         "private": true,
-        "can_evaluate": {}
+        "run_as_system": true,
+        "disable_arg_logs": true
     },
     {
         "name": "AWS_S3_Upload",
@@ -51,13 +38,26 @@
         "run_as_system": true
     },
     {
-        "name": "fetchBooks",
+        "name": "mainFunctions",
+        "private": false,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "test",
+        "private": false,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "updateLibraryUrl",
+        "private": true
+    },
+    {
+        "name": "getBooksFromList",
         "private": true,
         "can_evaluate": {}
     },
     {
-        "name": "getSaveFile",
-        "private": false,
-        "run_as_system": true
+        "name": "Update24HourLists",
+        "private": true
     }
 ]
