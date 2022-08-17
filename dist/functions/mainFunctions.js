@@ -32,14 +32,14 @@ const htmlParser = (type, text)=> {
 
 /////// Collections
 
-const getCollection = async (db,name)=> {
-  return await context.services.get("mongodb-atlas").db(db).collection(name);
+const getCollection = (db,name)=> {
+  return context.services.get("mongodb-atlas").db(db).collection(name);
 }
 
 const getLibrary = async (query) => {
   const libraries = getCollection("flibusta", "Libraries");
   try{
-    return  await libraries.findOne(query);
+    return  libraries.findOne(query);
   }catch (e) {
     return false;
   }
