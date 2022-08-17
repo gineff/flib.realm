@@ -2,22 +2,25 @@ const aws = async ()=> {
   const AWS = require('aws-sdk');
   const ep = new AWS.Endpoint('hb.bizmrg.com');
   const credentials = {accessKeyId: context.values.get("AWS_AccessKeyID"), secretAccessKey: context.values.get("AWS_SecretKey")};
-  const s3 = new AWS.S3({endpoint: ep, apiVersion: '2006-03-01', credentials});
-  return s3;
+  return new AWS.S3({endpoint: ep, apiVersion: '2006-03-01', credentials});
 }
 
-exports = function(changeEvent) {
-  const axios = require("axios").default;
+exports = async function(changeEvent) {
 
-  //context.http.get("flibusta.site/i/44/680744/img_0.jpeg")
-  const {documentKey, fullDocument, updateDescription} = changeEvent;
-  console.log("documentKey", JSON.stringify(documentKey));
-  console.log("fullDocument", JSON.stringify(fullDocument));
-  console.log("updateDescription", JSON.stringify(updateDescription));
+  const {data} = await Lists.findOne({_id: "1_w"})
+  /*const {fullDocument} = changeEvent;
+  const {data} = fullDocument;*/
+  const s3 = aws();
+  const params = {Bucket: "flib.s3", Key: "lists/1_w.json", Content: "application/json", Body: data};
 
+  s3.upload (params, function (err, data) {
+    if (err) {
+      console.log("Error", err);
+    } if (data) {
+      console.log("Upload Success", data.Location);
+    }
+  });
 
-  // /books
-  // /images small big
   /*
     A Database Trigger will always call a function with a changeEvent.
     Documentation on ChangeEvents: https://docs.mongodb.com/manual/reference/change-events/
