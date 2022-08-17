@@ -1,4 +1,40 @@
-exports = function(changeEvent) {
+
+
+exports = async function(changeEvent) {
+  const {aws} =  context.functions.execute("mainFunctions");
+  const axios = require("axios").default;
+  const proxyImageUrl ="https://images.weserv.nl/?url=";
+  //return proxyImageUrl+ "http://flibusta.is" + cover +"&h=500" ;
+
+  const {fullDocument} = changeEvent;
+  const {_id,image} = fullDocument;
+  const s3 = await aws();
+
+
+  const  uploadStream = async(params) => {
+    const pass = new stream.PassThrough();
+    await s3.upload(params)
+    return pass;
+  }
+
+
+  if(image){
+    const imageName = image.split("/")[4];
+    const response = await axios.get(url, {responseType: "stream"});
+    const ContentType = response.headers["content-type"] ||  "image/jpeg";
+    const params = {Bucket: "flib.s3", Key: `${_id}/${imageName}`, ContentType};
+    response.data.pipe(await uploadStream())
+
+  }
+
+
+  s3.upload (params, function (err, data) {
+    if (err) {
+      console.log("Error", err);
+    } if (data) {
+      console.log("Upload Success", data.Location);
+    }
+  });
   /*
     A Database Trigger will always call a function with a changeEvent.
     Documentation on ChangeEvents: https://docs.mongodb.com/manual/reference/change-events/

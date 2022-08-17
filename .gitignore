@@ -3,3 +3,4 @@ apikey
 ./test.mjs
 ./test.js
 ./index.html
+.env
