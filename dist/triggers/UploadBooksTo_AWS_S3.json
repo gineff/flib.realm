@@ -1,28 +1,26 @@
 {
-    "id": "62fd32245d69a4ba430d0d5f",
-    "name": "UploadListsTo_AWS_S3",
+    "id": "62fd38b3be296314946e281b",
+    "name": "UploadBooksTo_AWS_S3",
     "type": "DATABASE",
     "config": {
         "operation_types": [
-            "INSERT",
-            "UPDATE",
-            "REPLACE"
+            "INSERT"
         ],
         "database": "flibusta",
-        "collection": "Lists",
+        "collection": "Books",
         "service_name": "mongodb-atlas",
         "match": {},
         "project": {},
         "full_document": true,
         "full_document_before_change": false,
         "unordered": false,
-        "skip_catchup_events": true
+        "skip_catchup_events": false
     },
     "disabled": false,
     "event_processors": {
         "FUNCTION": {
             "config": {
-                "function_name": "UploadListsTo_AWS_S3"
+                "function_name": "UploadBooksTo_AWS_S3"
             }
         }
     }
