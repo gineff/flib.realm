@@ -16,7 +16,7 @@
         "unordered": false,
         "skip_catchup_events": false
     },
-    "disabled": false,
+    "disabled": true,
     "event_processors": {
         "FUNCTION": {
             "config": {
