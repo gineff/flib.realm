@@ -3,7 +3,7 @@
     "name": "Update24HourListsTrigger",
     "type": "SCHEDULED",
     "config": {
-        "schedule": "03 */1 * * *",
+        "schedule": "25 */1 * * *",
         "skip_catchup_events": false
     },
     "disabled": false,
