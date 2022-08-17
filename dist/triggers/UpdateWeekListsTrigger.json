@@ -3,7 +3,7 @@
     "name": "UpdateWeekListsTrigger",
     "type": "SCHEDULED",
     "config": {
-        "schedule": "0 */6 * * *",
+        "schedule": "6 */6 * * *",
         "skip_catchup_events": false
     },
     "disabled": false,
