@@ -1,49 +1,6 @@
 [
     {
-        "name": "xmlParserFlibusta",
-        "private": true,
-        "run_as_system": true,
-        "disable_arg_logs": true
-    },
-    {
-        "name": "fetchBooks",
-        "private": true,
-        "can_evaluate": {}
-    },
-    {
-        "name": "updateGitHubPagesDB",
-        "private": true
-    },
-    {
-        "name": "Update24HourLists",
-        "private": true
-    },
-    {
-        "name": "getBooksFromList",
-        "private": true,
-        "can_evaluate": {}
-    },
-    {
-        "name": "getRatingNComments",
-        "private": false,
-        "run_as_system": true
-    },
-    {
-        "name": "updateLibraryUrl",
-        "private": true
-    },
-    {
-        "name": "test",
-        "private": false,
-        "disable_arg_logs": true
-    },
-    {
         "name": "UpdateComentsNRating",
-        "private": false,
-        "run_as_system": true
-    },
-    {
-        "name": "getSaveFile",
         "private": false,
         "run_as_system": true
     },
@@ -53,11 +10,54 @@
         "disable_arg_logs": true
     },
     {
-        "name": "AWS_S3_Upload",
+        "name": "getSaveFile",
+        "private": false,
+        "run_as_system": true
+    },
+    {
+        "name": "Update24HourLists",
+        "private": true
+    },
+    {
+        "name": "xmlParserFlibusta",
+        "private": true,
+        "run_as_system": true,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "getBooksFromList",
+        "private": true,
+        "can_evaluate": {}
+    },
+    {
+        "name": "test",
+        "private": false,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "updateLibraryUrl",
         "private": true
     },
     {
         "name": "UpdateWeekList",
+        "private": true
+    },
+    {
+        "name": "fetchBooks",
+        "private": true,
+        "can_evaluate": {}
+    },
+    {
+        "name": "getRatingNComments",
+        "private": false,
+        "run_as_system": true
+    },
+    {
+        "name": "updateGitHubPagesDB",
+        "private": true
+    },
+    {
+        "name": "UploadListsTo_AWS_S3",
         "private": true
     }
 ]

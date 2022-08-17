@@ -1,6 +1,6 @@
 {
     "id": "62f8bfb0e356e44ce8f16650",
-    "name": "AWS_S3",
+    "name": "UploadListsTo_AWS_S3",
     "type": "DATABASE",
     "config": {
         "operation_types": [
@@ -22,7 +22,7 @@
     "event_processors": {
         "FUNCTION": {
             "config": {
-                "function_name": "AWS_S3_Upload"
+                "function_name": "UploadListsTo_AWS_S3"
             }
         }
     }
