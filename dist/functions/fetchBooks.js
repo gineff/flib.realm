@@ -19,7 +19,7 @@ exports = async ()=> {
     try{
       await Books.insertMany(books, {ordered: false});
     }catch (e) {
-      console.log(JSON.stringify(e));
+      console.log(e);
       break;
     }
   }

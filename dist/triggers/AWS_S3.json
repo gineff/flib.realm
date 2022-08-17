@@ -4,10 +4,11 @@
     "type": "DATABASE",
     "config": {
         "operation_types": [
-            "INSERT"
+            "INSERT",
+            "UPDATE"
         ],
         "database": "flibusta",
-        "collection": "Books",
+        "collection": "Lists",
         "service_name": "mongodb-atlas",
         "match": {},
         "project": {},
