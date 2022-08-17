@@ -1,17 +1,12 @@
-const aws = async ()=> {
-  const AWS = require('aws-sdk');
-  const ep = new AWS.Endpoint('hb.bizmrg.com');
-  const credentials = {accessKeyId: context.values.get("AWS_AccessKeyID"), secretAccessKey: context.values.get("AWS_SecretKey")};
-  return new AWS.S3({endpoint: ep, apiVersion: '2006-03-01', credentials});
-}
+
 
 exports = async function(changeEvent) {
+  const {aws} =  context.functions.execute("mainFunctions");
 
-  const {data} = await Lists.findOne({_id: "1_w"})
-  /*const {fullDocument} = changeEvent;
-  const {data} = fullDocument;*/
+  const {fullDocument} = changeEvent;
+  const {data} = fullDocument;
   const s3 = aws();
-  const params = {Bucket: "flib.s3", Key: "lists/1_w.json", Content: "application/json", Body: data};
+  const params = {Bucket: "flib.s3", Key: "lists/1_w.json", Content: "application/json", Body: JSON.stringify(data)};
 
   s3.upload (params, function (err, data) {
     if (err) {

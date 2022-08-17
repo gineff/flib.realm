@@ -32,40 +32,29 @@ const htmlParser = (type, text)=> {
 
 /////// Collections
 
-const getCollection = (db,name)=> {
-  return context.services.get("mongodb-atlas").db(db).collection(name);
+const getCollection = async (db,name)=> {
+  return await context.services.get("mongodb-atlas").db(db).collection(name);
 }
 
 const getLibrary = async (query) => {
   const libraries = getCollection("flibusta", "Libraries");
-  let library;
   try{
-    library = await libraries.findOne(query);
+    return  await libraries.findOne(query);
   }catch (e) {
     return false;
   }
-  return library;
-}
-
-const checkLibrarySiteStatus = async (query)=> {
-  const library = await getLibrary(query);
-  if(!library) return 4// mongodb is unavailable
-  return library.status;
-  // 1 site is available;
-  // 2 reserve site is available;
-  // 3 site is unavailable;
-  // false mongodb unavailable
-}
-
-const checkResourceIsAvailable = (url)=> {
-
 }
 
 const getLibraryUrl = async (query)=> {
   const { url } = await getLibrary(query);
-
   return url;
 }
 
+const aws = async ()=> {
+  const AWS = require('aws-sdk');
+  const ep = new AWS.Endpoint('hb.bizmrg.com');
+  const credentials = {accessKeyId: context.values.get("AWS_AccessKeyID"), secretAccessKey: context.values.get("AWS_SecretKey")};
+  return new AWS.S3({endpoint: ep, apiVersion: '2006-03-01', credentials});
+}
 
-exports = ()=>{return {getText, getOpds, xmlParser, htmlParser, getLibrary, checkLibrarySiteStatus, getLibraryUrl}}
+exports = ()=>{return {getText, getOpds, xmlParser, htmlParser, getLibrary, aws, getLibraryUrl}}
