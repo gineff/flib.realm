@@ -1,4 +1,4 @@
-exports = () => {
+exports = (arg) => {
   const {getText, htmlParser, xmlParser, getLibraryUrl} =  context.functions.execute("mainFunctions");
   const Lists = context.services.get("mongodb-atlas").db("flibusta").collection("Lists");
   const Books = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
@@ -18,8 +18,13 @@ exports = () => {
         if(bookFromOPDS) basket.push(bookFromOPDS);
       }
     }
-    basket.length && await Books.insertMany(basket,
-      {ordered: false, silent: true}).catch(e=> console.log(e));
+
+    try{
+      basket.length && await Books.insertMany(basket, {ordered: false, silent: true})
+    }catch(e){
+      console.log(e);
+    }
+
     return  idOfBooks;
   };
 
@@ -57,5 +62,5 @@ exports = () => {
     }
   };
 
-  getList();
+  getList(arg);
 }
