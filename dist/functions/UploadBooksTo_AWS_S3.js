@@ -13,12 +13,17 @@ exports = async function(changeEvent) {
 
   const  uploadStream = async(url, Key) => {
     const pass = new stream.PassThrough();
-    const response = await axios.get(url, {responseType: "stream"});
-    response.data.pipe(pass);
+    try{
+      const response = await axios.get(url, {responseType: "stream"});
+      response.data.pipe(pass);
+    }catch (e) {
+      console.log(e);
+    }
+
 
     const ContentType = response.headers["content-type"] ||  "octet-stream";
     //Key при загрузке файла fb2
-    Key = Key || response.headers["content-disposition"]?.split("=")[1];
+    Key = Key || _id+"/"+response.headers["content-disposition"]?.split("=")[1]?.replace("\"","");
     const params = {Bucket: "flib.s3", Key, ContentType, Body: pass};
 
     await s3.upload(params, (err, data)=> {
@@ -52,4 +57,5 @@ exports = async function(changeEvent) {
     }
   }
 
+  Books.updateOne({_id},{$set:{s3: true}});
 };
