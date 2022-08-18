@@ -16,7 +16,7 @@ exports = async ()=> {
   for (let page of arr) {
     const books = await fetchBooks(await getLibrary({_id: 1}), page);
     const BooksNotInDb = getBooksNotInDb(books);
-    await Books.insertMany(BooksNotInDb);
+    if(BooksNotInDb.length > 0) await Books.insertMany(BooksNotInDb);
     if (BooksNotInDb.length !== books.length) break;
 
   }

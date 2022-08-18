@@ -1,11 +1,12 @@
 
 exports = async function(changeEvent) {
-  const {aws, getLibraryUrl, getCollection} =  context.functions.execute("mainFunctions");
+  const {aws, getLibraryUrl} =  context.functions.execute("mainFunctions");
+  const Books = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
   const axios = require("axios").default;
   const stream = require("stream");
 
   const {fullDocument} = changeEvent;
-  const {_id, image, downloads} = fullDocument || await (getCollection("flibusta", "Books")).findOne({_id: changeEvent});
+  const {_id, image, downloads} = fullDocument || await Books.findOne({_id: changeEvent});
   const s3 = await aws();
   const libUrl = await getLibraryUrl({_id: 1});
   const proxyImageUrl ="https://images.weserv.nl/?url=";
