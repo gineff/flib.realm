@@ -22,7 +22,7 @@ exports = async function(changeEvent) {
     const params = {Bucket: "flib.s3", Key, ContentType, Body: pass};
 
     await s3.upload(params, (err, data)=> {
-      console.log("stream", err);
+      console.log("stream error", err);
       console.log(data?.Location);
     })
   }
@@ -48,8 +48,7 @@ exports = async function(changeEvent) {
     const href = downloads.filter(el=> el.type === "application/fb2+zip")[0]?.href;
     if(href) {
       const url = `http://${libUrl}${href}`;
-      const Key = `${_id}/${h}-${imageName}`;
-      await uploadStream(url, Key);
+      await uploadStream(url);
     }
   }
 

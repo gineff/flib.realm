@@ -5,7 +5,7 @@ exports = (arg) => {
   let url;
 
   const checkAddToDb = async books => {
-    const BooksNotInDb = getBooksNotInDb(books);
+    const BooksNotInDb = await getBooksNotInDb(books);
     const basket = [];
 
     for(let book of BooksNotInDb){

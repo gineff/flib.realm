@@ -56,6 +56,7 @@ const getBooksNotInDb  = async (books)=> {
   const booksInDb = await Books.find({lid: 1, bid: {$in: idOfBooks}}, {bid:1, _id: 0}).toArray();
   const booksIDInDb = booksInDb.map(el=> el.bid);
   const booksNotInDb = books.filter(el=> !booksIDInDb.includes(el.bid));
+  console.log("booksNotInDb", JSON.stringify(booksNotInDb))
   return booksNotInDb;
 }
 
