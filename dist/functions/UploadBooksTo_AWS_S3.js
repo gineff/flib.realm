@@ -6,7 +6,7 @@ exports = async function(changeEvent) {
   const stream = require("stream");
 
   const {fullDocument} = changeEvent;
-  const {_id, image, downloads} = fullDocument || await Books.findOne({_id: changeEvent});
+  const {_id, image, downloads} = fullDocument || await Books.findOne({_id: new BSON.ObjectId(changeEvent)});
   const s3 = await aws();
   const libUrl = await getLibraryUrl({_id: 1});
   const proxyImageUrl ="https://images.weserv.nl/?url=";
