@@ -5,16 +5,18 @@ exports = async function(changeEvent) {
   const axios = require("axios").default;
   const stream = require("stream");
 
-  const {fullDocument} = changeEvent;
-  const {_id, image, downloads} = fullDocument || await Books.findOne({_id: new BSON.ObjectId(changeEvent)});
+  let {fullDocument} = changeEvent;
+  fullDocument = fullDocument ||  await Books.findOne({_id: new BSON.ObjectId(changeEvent)});
+  const {_id, image, downloads} = fullDocument;
   const s3 = await aws();
   const libUrl = await getLibraryUrl({_id: 1});
   const proxyImageUrl ="https://images.weserv.nl/?url=";
 
   const  uploadStream = async(url, Key) => {
     const pass = new stream.PassThrough();
+    let response;
     try{
-      const response = await axios.get(url, {responseType: "stream"});
+      response = await axios.get(url, {responseType: "stream"});
       response.data.pipe(pass);
     }catch (e) {
       console.log(e);
@@ -23,7 +25,7 @@ exports = async function(changeEvent) {
 
     const ContentType = response.headers["content-type"] ||  "octet-stream";
     //Key при загрузке файла fb2
-    Key = Key || _id+"/"+response.headers["content-disposition"]?.split("=")[1]?.replace("\"","");
+    Key = Key || _id+"/"+response.headers["content-disposition"]?.split("=")[1]?.replace(/\"/g,"");
     const params = {Bucket: "flib.s3", Key, ContentType, Body: pass};
 
     await s3.upload(params, (err, data)=> {
@@ -31,6 +33,7 @@ exports = async function(changeEvent) {
       console.log(data?.Location);
     })
   }
+
 
   await s3.upload({Bucket: "flib.s3", Key: `${_id}/book.json`, ContentType: "application/json", Body: JSON.stringify(fullDocument)},
     (err, data)=> {
