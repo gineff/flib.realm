@@ -27,7 +27,7 @@ exports = (arg) => {
     if(!book.author[0].id) return undefined;
     const text = await getText(`http://${url}/opds/author/${book.author[0].id}/time/${(searchPage-1)}`);
     const data = xmlParser(text);
-    const filteredData = data.filter(el => el.bid === book.bid)[0];
+    const filteredData = data.filter(el => el.bid === book.bid || el.title === book.title)[0];
     if(data.length === 20 && filteredData === undefined){
       return await searchBookByAuthor(book, ++searchPage);
     }else{
