@@ -1,77 +1,55 @@
 
-
 exports = async function(changeEvent) {
-  const {aws} =  context.functions.execute("mainFunctions");
+  const {aws, getLibraryUrl, getCollection} =  context.functions.execute("mainFunctions");
   const axios = require("axios").default;
-  const proxyImageUrl ="https://images.weserv.nl/?url=";
-  //return proxyImageUrl+ "http://flibusta.is" + cover +"&h=500" ;
+  const stream = require("stream");
 
   const {fullDocument} = changeEvent;
-  const {_id,image} = fullDocument;
+  const {_id, image, downloads} = fullDocument || await (getCollection("flibusta", "Books")).findOne({_id: changeEvent});
   const s3 = await aws();
+  const libUrl = await getLibraryUrl({_id: 1});
+  const proxyImageUrl ="https://images.weserv.nl/?url=";
 
-
-  const  uploadStream = async(params) => {
+  const  uploadStream = async(url, Key) => {
     const pass = new stream.PassThrough();
-    await s3.upload(params)
-    return pass;
+    const response = await axios.get(url, {responseType: "stream"});
+    response.data.pipe(pass);
+
+    const ContentType = response.headers["content-type"] ||  "octet-stream";
+    //Key при загрузке файла fb2
+    Key = Key || response.headers["content-disposition"]?.split("=")[1];
+    const params = {Bucket: "flib.s3", Key, ContentType, Body: pass};
+
+    await s3.upload(params, (err, data)=> {
+      console.log("stream", err);
+      console.log(data?.Location);
+    })
   }
+
+  await s3.upload({Bucket: "flib.s3", Key: `${_id}/book.json`, ContentType: "application/json", Body: JSON.stringify(fullDocument)},
+    (err, data)=> {
+    console.log("book",err);
+    console.log(data?.Location);
+  })
 
 
   if(image){
     const imageName = image.split("/")[4];
-    const response = await axios.get(url, {responseType: "stream"});
-    const ContentType = response.headers["content-type"] ||  "image/jpeg";
-    const params = {Bucket: "flib.s3", Key: `${_id}/${imageName}`, ContentType};
-    response.data.pipe(await uploadStream())
-
+    const imageHeights = [167,500];
+    for(let h of imageHeights) {
+      const url = proxyImageUrl+`http://${libUrl}${image}&h=${h}`;
+      const Key = `${_id}/${h}-${imageName}`;
+      await uploadStream(url, Key);
+    }
   }
 
-
-  s3.upload (params, function (err, data) {
-    if (err) {
-      console.log("Error", err);
-    } if (data) {
-      console.log("Upload Success", data.Location);
+  if(downloads) {
+    const href = downloads.filter(el=> el.type === "application/fb2+zip")[0]?.href;
+    if(href) {
+      const url = `http://${libUrl}${href}`;
+      const Key = `${_id}/${h}-${imageName}`;
+      await uploadStream(url, Key);
     }
-  });
-  /*
-    A Database Trigger will always call a function with a changeEvent.
-    Documentation on ChangeEvents: https://docs.mongodb.com/manual/reference/change-events/
+  }
 
-    Access the _id of the changed document:
-    const docId = changeEvent.documentKey._id;
-
-    Access the latest version of the changed document
-    (with Full Document enabled for Insert, Update, and Replace operations):
-    const fullDocument = changeEvent.fullDocument;
-
-    const updateDescription = changeEvent.updateDescription;
-
-    See which fields were changed (if any):
-    if (updateDescription) {
-      const updatedFields = updateDescription.updatedFields; // A document containing updated fields
-    }
-
-    See which fields were removed (if any):
-    if (updateDescription) {
-      const removedFields = updateDescription.removedFields; // An array of removed fields
-    }
-
-    Functions run by Triggers are run as System users and have full access to Services, Functions, and MongoDB Data.
-
-    Access a mongodb service:
-    const collection = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
-    const doc = collection.findOne({ name: "mongodb" });
-
-    Note: In Atlas Triggers, the service name is defaulted to the cluster name.
-
-    Call other named functions if they are defined in your application:
-    const result = context.functions.execute("function_name", arg1, arg2);
-
-    Access the default http client and execute a GET request:
-    const response = context.http.get({ url: <URL> })
-
-    Learn more about http client here: https://docs.mongodb.com/realm/functions/context/#context-http
-  */
 };

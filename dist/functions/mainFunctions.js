@@ -50,6 +50,17 @@ const getLibraryUrl = async (query)=> {
   return url;
 }
 
+const getBooksNotInDb  = async (books)=> {
+  const Books = getCollection('flibusta','Books');
+  const idOfBooks =  books.map(el=> el.bid);
+  const booksInDb = await Books.find({lid: 1, bid: {$in: idOfBooks}}, {bid:1, _id: 0}).toArray();
+  const booksIDInDb = booksInDb.map(el=> el.bid);
+  const booksNotInDb = books.filter(el=> !booksIDInDb.includes(el.bid));
+  return booksNotInDb;
+}
+
+
+
 const aws = async ()=> {
   const AWS = require('aws-sdk');
   const ep = new AWS.Endpoint('hb.bizmrg.com');
@@ -57,4 +68,15 @@ const aws = async ()=> {
   return new AWS.S3({endpoint: ep, apiVersion: '2006-03-01', credentials});
 }
 
-exports = ()=>{return {getText, getOpds, xmlParser, htmlParser, getLibrary, aws, getLibraryUrl}}
+
+
+exports = ()=>{return {
+  getText,
+  getOpds,
+  xmlParser,
+  htmlParser,
+  getLibrary,
+  aws,
+  getLibraryUrl,
+  getBooksNotInDb
+}}

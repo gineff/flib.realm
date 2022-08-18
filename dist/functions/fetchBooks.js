@@ -1,6 +1,6 @@
 exports = async ()=> {
 
-  const {getText, xmlParser,  getLibrary} =  context.functions.execute("mainFunctions");
+  const {getText, xmlParser, getLibrary, getBooksNotInDb} =  context.functions.execute("mainFunctions");
   const Books = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
 
   const fetchBooks = async (lib, page)=> {
@@ -15,12 +15,9 @@ exports = async ()=> {
 
   for (let page of arr) {
     const books = await fetchBooks(await getLibrary({_id: 1}), page);
-    console.log(page, books.length)
-    try{
-      await Books.insertMany(books, {ordered: false});
-    }catch (e) {
-      console.log(e);
-      break;
-    }
+    const BooksNotInDb = getBooksNotInDb(books);
+    await Books.insertMany(BooksNotInDb);
+    if (BooksNotInDb.length !== books.length) break;
+
   }
 }
