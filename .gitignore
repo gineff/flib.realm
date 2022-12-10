@@ -4,3 +4,10 @@ apikey
 ./test.js
 ./index.html
 .env
+.eslintrc.json
+.prettierrc.json
+.gitignore
+package.json
+package-lock.json
+.gitignore
+scripts

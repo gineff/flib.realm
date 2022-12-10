@@ -1,3 +1,3 @@
-exports = async function() {
-    context.functions.execute("getBooksFromList", "24");
+exports = async function update24HoursLists() {
+  context.functions.execute("getBooksFromList", "24");
 };

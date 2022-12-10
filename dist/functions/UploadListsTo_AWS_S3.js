@@ -1,18 +1,22 @@
+exports = async function uploadLists(changeEvent) {
+  const { aws } = context.functions.execute("mainFunctions");
 
-
-exports = async function(changeEvent) {
-  const {aws} =  context.functions.execute("mainFunctions");
-
-  const {fullDocument} = changeEvent;
-  const {_id,data} = fullDocument;
+  const { fullDocument } = changeEvent;
+  const { _id, data } = fullDocument;
   const s3 = await aws();
-  const params = {Bucket: "flib.s3", Key: `lists/${_id}.json`, Content: "application/json", Body: JSON.stringify(data)};
+  const params = {
+    Bucket: "flib.s3",
+    Key: `lists/${_id}.json`,
+    Content: "application/json",
+    Body: JSON.stringify(data),
+  };
 
-  s3.upload (params, function (err, data) {
+  s3.upload(params, (err, _data) => {
     if (err) {
       console.log("Error", err);
-    } if (data) {
-      console.log("Upload Success", data.Location);
+    }
+    if (_data) {
+      console.log("Upload Success", _data.Location);
     }
   });
 
