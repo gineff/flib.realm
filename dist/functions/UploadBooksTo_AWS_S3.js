@@ -23,11 +23,13 @@ exports = async function(changeEvent) {
       console.log(e);
     }
 
-
     const ContentType = response.headers["content-type"] ||  "octet-stream";
     //Key при загрузке файла fb2
-    fb2FileName = response.headers["content-disposition"]?.split("=")[1]?.replace(/\"/g,"");
-    Key = Key || fb2FileName;
+    if(!Key) {
+      fb2FileName = response.headers["content-disposition"]?.split("=")[1]?.replace(/\"/g,"");
+      Key = `${_id}/${fb2FileName}`;
+    }
+
     const params = {Bucket: "flib.s3", Key, ContentType, Body: pass};
 
     await s3.upload(params, (err, data)=> {
