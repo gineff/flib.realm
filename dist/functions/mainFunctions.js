@@ -1,7 +1,6 @@
-const matchAll = require("string.prototype.matchall");
-const AWS = require("aws-sdk");
-
-const getText = async (url) =>  (await context.http.get({ url })).body.text() || "";
+async function getText(url) {
+  return (await context.http.get({ url })).body.text() || "";
+}
 
 const getOpds = async (url) => {
   const response = await context.http.get({ url });
@@ -10,9 +9,8 @@ const getOpds = async (url) => {
 
 const xmlParser = (text) => context.functions.execute("xmlParserFlibusta", text);
 
-
 const htmlParser = (type, text) => {
-  
+  const matchAll = require("string.prototype.matchall");
   if (type === "List") {
     const matches = Array.from(matchAll(text, /<a href="\/a\/(.*?)">(.*?)<\/a> - <a href="\/b\/(.*?)">(.*?)<\/a>/g));
     return matches.map((el) => ({
@@ -21,13 +19,11 @@ const htmlParser = (type, text) => {
       title: el[4],
       sequencesTitle: [],
     }));
-  } 
+  }
   return [];
-
 };
 
 const getCollection = (db, name) => context.services.get("mongodb-atlas").db(db).collection(name);
-
 
 const getLibrary = async (query) => {
   const libraries = getCollection("flibusta", "Libraries");
@@ -54,6 +50,7 @@ const getBooksNotInDb = async (books) => {
 };
 
 const aws = async () => {
+  const AWS = require("aws-sdk");
   const ep = new AWS.Endpoint("hb.bizmrg.com");
   const credentials = {
     accessKeyId: context.values.get("AWS_AccessKeyID"),
@@ -63,13 +60,12 @@ const aws = async () => {
 };
 
 exports = () => ({
-    getText,
-    getOpds,
-    xmlParser,
-    htmlParser,
-    getLibrary,
-    aws,
-    getLibraryUrl,
-    getBooksNotInDb,
-  }
-);
+  getText,
+  getOpds,
+  xmlParser,
+  htmlParser,
+  getLibrary,
+  aws,
+  getLibraryUrl,
+  getBooksNotInDb,
+});
