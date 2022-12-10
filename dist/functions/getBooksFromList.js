@@ -45,13 +45,13 @@ exports = (arg) => {
     await checkAddToDb(list);
     const bidOfBooks = list.map(el=>el.bid);
     const idOfBooks =  await Books.find({lid: 1, bid: {$in: bidOfBooks}}, {_id: 1}).toArray();
-    if(Array.isArray(booksId) && booksId.length){
+    if(Array.isArray(idOfBooks) && idOfBooks.length){
 
       Lists.updateOne({_id:`1_${listId}`},
         {_id:`1_${listId}`,
           lib_id:1,
           name: `popular ${listId}`,
-          data: booksId,
+          data: idOfBooks,
           updatedAt: new Date()},
         {upsert: true});
     }
