@@ -1,10 +1,10 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
-const matchAll = require("string.prototype.matchall");
-const { DOMParser } = require("xmldom");
-
 function xmlToJson(xml) {
+  const matchAll = require("string.prototype.matchall");
+  const { DOMParser } = require("xmldom");
+
   if (typeof xml === "string") {
     xml = new DOMParser().parseFromString(xml, "application/xml");
   }
