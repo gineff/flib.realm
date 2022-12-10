@@ -42,8 +42,9 @@ exports = (arg) => {
     url = await getLibraryUrl({_id: 1})
     const text = await getText(`http://${url}/stat/${listId}`);
     const list = htmlParser("List", text);
-    const booksId = await checkAddToDb(list);
-
+    await checkAddToDb(list);
+    const bidOfBooks = list.map(el=>el.bid);
+    const idOfBooks =  await Books.find({lid: 1, bid: {$in: bidOfBooks}}, {_id: 1}).toArray();
     if(Array.isArray(booksId) && booksId.length){
 
       Lists.updateOne({_id:`1_${listId}`},

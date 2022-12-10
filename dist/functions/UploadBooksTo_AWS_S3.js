@@ -5,6 +5,7 @@ exports = async function(changeEvent) {
   const axios = require("axios").default;
   const stream = require("stream");
 
+  let fb2FileName = undefined;
   let {fullDocument} = changeEvent;
   fullDocument = fullDocument ||  await Books.findOne({_id: new BSON.ObjectId(changeEvent)});
   const {_id, image, downloads} = fullDocument;
@@ -25,7 +26,8 @@ exports = async function(changeEvent) {
 
     const ContentType = response.headers["content-type"] ||  "octet-stream";
     //Key при загрузке файла fb2
-    Key = Key || _id+"/"+response.headers["content-disposition"]?.split("=")[1]?.replace(/\"/g,"");
+    fb2FileName = response.headers["content-disposition"]?.split("=")[1]?.replace(/\"/g,"");
+    Key = Key || fb2FileName;
     const params = {Bucket: "flib.s3", Key, ContentType, Body: pass};
 
     await s3.upload(params, (err, data)=> {
@@ -34,6 +36,17 @@ exports = async function(changeEvent) {
     })
   }
 
+  if(downloads) {
+    const href = downloads.filter(el=> el.type === "application/fb2+zip")[0]?.href;
+    if(href) {
+      const url = `http://${libUrl}${href}`;
+      await uploadStream(url);
+    }
+  }
+
+  if(fb2FileName) {
+    fullDocument.fb2FileName = fb2FileName;
+  }
 
   await s3.upload({Bucket: "flib.s3", Key: `${_id}/book.json`, ContentType: "application/json", Body: JSON.stringify(fullDocument)},
     (err, data)=> {
@@ -52,13 +65,7 @@ exports = async function(changeEvent) {
     }
   }
 
-  if(downloads) {
-    const href = downloads.filter(el=> el.type === "application/fb2+zip")[0]?.href;
-    if(href) {
-      const url = `http://${libUrl}${href}`;
-      await uploadStream(url);
-    }
-  }
+  const update = fb2FileName? {s3: true, fb2FileName} : {s3: true};
 
-  Books.updateOne({_id},{$set:{s3: true}});
+  Books.updateOne({_id},{$set: update});
 };
