@@ -13,7 +13,8 @@ const fillGenres = async (books) => {
   for (const book of books) {
     book.genres = book.genre.length
       ? // eslint-disable-next-line no-await-in-loop
-        await Genres.find({ title: { $in: book.genre }, id: { $gt: 0 } }, { id: 1, _id: 0 }).toArray()
+        (await Genres.find({ title: { $in: book.genre }, id: { $gt: 0 } }, { id: 1, _id: 0 }).toArray())
+          .map(el=>el.id)
       : [];
   }
 
