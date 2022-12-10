@@ -1,8 +1,8 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-param-reassign */
-const matchAll = require("string.prototype.matchall");
 
 const commentParser = async (text) => {
+  const matchAll = require("string.prototype.matchall");
   const matchesComments = Array.from(matchAll(text, /<span class="container_.*?>(.*?)<\/span>/gm));
 
   const comments = matchesComments.map((el) => {
@@ -48,6 +48,7 @@ async function getList() {
 
 async function getComments(booksId) {
   const comments = [];
+  // eslint-disable-next-line no-nested-ternary
   booksId = booksId ? (Array.isArray(booksId) ? booksId : [booksId]) : await getList();
 
   for (const id of booksId) {

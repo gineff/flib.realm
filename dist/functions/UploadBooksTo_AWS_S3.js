@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
-const axios = require("axios").default;
-const stream = require("stream");
-
 exports = async function uploadBooks(changeEvent) {
+  const axios = require("axios").default;
+  const stream = require("stream");
+
   const { aws, getLibraryUrl } = context.functions.execute("mainFunctions");
   const Books = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
 

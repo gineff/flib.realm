@@ -1,10 +1,9 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-param-reassign */
-const axios = require("axios").default;
-
-const { getLibrary } = context.functions.execute("mainFunctions");
-
 exports = async (id) => {
+  const axios = require("axios").default;
+  const { getLibrary } = context.functions.execute("mainFunctions");
+
   id = Number.isInteger(id) && id > 0 ? id : 1;
 
   const Libraries = context.services.get("mongodb-atlas").db("flibusta").collection("Libraries");

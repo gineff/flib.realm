@@ -14,10 +14,9 @@ exports = (arg) => {
     if (data.length === 20 && filteredData === undefined) {
       // eslint-disable-next-line no-plusplus
       return searchBookByAuthor(book, ++searchPage);
-    } 
-    
+    }
+
     return filteredData;
-    
   };
 
   const checkAddToDb = async (books) => {
@@ -28,17 +27,14 @@ exports = (arg) => {
       console.log("book Not In Db", JSON.stringify(book.title));
       basket.push(searchBookByAuthor(book));
     }
-    await Promise.all(basket)
-    
+    await Promise.all(basket);
+
     if (basket.length) {
       const { insertedIds } = await Books.insertMany(basket, { ordered: false, silent: true });
       return insertedIds;
     }
     return [];
-    
   };
-
-
 
   async function getList(listId) {
     listId = listId === "w" || listId === "24" ? listId : "w";
@@ -56,7 +52,7 @@ exports = (arg) => {
         { upsert: true }
       );
     }
-  };
+  }
 
   getList(arg);
 };
