@@ -7,12 +7,15 @@ const getOpds = async (url) => {
   return response.body.text();
 };
 
-const fillGenres = async(book) => {
-  if(!book.genre.length) return book;
+const fillGenres = async(books) => {
+  if(!books.length) return books;
   const Genres = context.services.get("mongodb-atlas").db("flibusta").collection("Genres");
-  // eslint-disable-next-line no-param-reassign
-  book.genres = await Genres.find({ title: { $in: book.genre } }, { id: 1, _id: 0 }).toArray();
-  return book;
+  for(const book of books) {
+    // eslint-disable-next-line no-await-in-loop
+    book.genres = await Genres.find({ title: { $in: book.genre } }, { id: 1, _id: 0 }).toArray();
+  }
+
+    return books;
 }
 
 const xmlParser = (text) => context.functions.execute("xmlParserFlibusta", text);
