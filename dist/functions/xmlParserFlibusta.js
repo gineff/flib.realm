@@ -16,7 +16,7 @@ function xmlToJson(xml) {
   for (let i = 0; i < feed.childNodes.length; i++) {
     const item = feed.childNodes.item(i);
     if (item.nodeName === "entry") {
-      const book = { author: [], genre: [], sequencesId: [], downloads: [] };
+      const book = { author: [], genre: [], genres: [], sequencesId: [], downloads: [] };
       for (let ii = 0; ii < item.childNodes.length; ii++) {
         const el = item.childNodes.item(ii);
         if (el.nodeName === "title") {
