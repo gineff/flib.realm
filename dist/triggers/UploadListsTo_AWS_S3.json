@@ -16,7 +16,8 @@
         "full_document": true,
         "full_document_before_change": false,
         "unordered": false,
-        "skip_catchup_events": true
+        "skip_catchup_events": true,
+        "tolerate_resume_errors": false
     },
     "disabled": false,
     "event_processors": {

@@ -1,26 +1,22 @@
 [
     {
-        "name": "UpdateWeekList",
+        "name": "fetchBooks",
+        "private": true,
+        "can_evaluate": {}
+    },
+    {
+        "name": "xmlParserFlibusta",
+        "private": true,
+        "run_as_system": true,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "Update24HourLists",
         "private": true
     },
     {
-        "name": "UploadListsTo_AWS_S3",
+        "name": "UploadBooksTo_AWS_S3",
         "private": true
-    },
-    {
-        "name": "getSaveFile",
-        "private": false,
-        "run_as_system": true
-    },
-    {
-        "name": "UpdateComentsNRating",
-        "private": false,
-        "run_as_system": true
-    },
-    {
-        "name": "getRatingNComments",
-        "private": false,
-        "run_as_system": true
     },
     {
         "name": "updateGitHubPagesDB",
@@ -36,15 +32,13 @@
         "disable_arg_logs": true
     },
     {
-        "name": "xmlParserFlibusta",
-        "private": true,
-        "run_as_system": true,
-        "disable_arg_logs": true
+        "name": "UploadListsTo_AWS_S3",
+        "private": true
     },
     {
-        "name": "fetchBooks",
-        "private": true,
-        "can_evaluate": {}
+        "name": "getSaveFile",
+        "private": false,
+        "run_as_system": true
     },
     {
         "name": "getBooksFromList",
@@ -52,16 +46,22 @@
         "can_evaluate": {}
     },
     {
+        "name": "getRatingNComments",
+        "private": false,
+        "run_as_system": true
+    },
+    {
         "name": "mainFunctions",
         "private": false,
         "disable_arg_logs": true
     },
     {
-        "name": "Update24HourLists",
-        "private": true
+        "name": "UpdateComentsNRating",
+        "private": false,
+        "run_as_system": true
     },
     {
-        "name": "UploadBooksTo_AWS_S3",
+        "name": "UpdateWeekList",
         "private": true
     }
 ]
