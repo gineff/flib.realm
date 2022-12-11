@@ -7,14 +7,13 @@ const getOpds = async (url) => {
   return response.body.text();
 };
 
-const fillGenres = async (books) => {
+const fillGenres = (books) => {
   if (!books.length) return books;
   const genresEntries = context.values.get("genres");
   const genres = new Map(genresEntries);
-
-  for (const book of books) {
+  books.forEach(book => {
     book.genres = book.genre.length ? book.genre.map((el) => genres.get(el)) : [];
-  }
+  })
   return books;
 };
 
