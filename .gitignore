@@ -11,3 +11,6 @@ package.json
 package-lock.json
 .gitignore
 scripts
+.eslintrc.js
+.prettierrc
+yarn.lock
