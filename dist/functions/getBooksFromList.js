@@ -54,7 +54,7 @@ exports = arg => {
         })
         return insertedIds
       }
-    } catch (e) {}
+    } catch (e) {'checkAddToDb error', e}
 
     return []
   }
