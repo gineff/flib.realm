@@ -1,12 +1,11 @@
 {
-    "id": "61261150c93b5276a52dee42",
     "name": "Update24HourListsTrigger",
     "type": "SCHEDULED",
+    "disabled": true,
     "config": {
         "schedule": "03 */1 * * *",
         "skip_catchup_events": false
     },
-    "disabled": false,
     "event_processors": {
         "FUNCTION": {
             "config": {

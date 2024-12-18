@@ -1,12 +1,11 @@
 {
-    "id": "61c0c4ae80f5bb671da329e4",
     "name": "UpdateComments",
     "type": "SCHEDULED",
+    "disabled": true,
     "config": {
         "schedule": "5 */2 * * *",
         "skip_catchup_events": false
     },
-    "disabled": true,
     "event_processors": {
         "FUNCTION": {
             "config": {

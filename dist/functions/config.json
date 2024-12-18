@@ -1,38 +1,5 @@
 [
     {
-        "name": "Update24HourLists",
-        "private": true
-    },
-    {
-        "name": "getSaveFile",
-        "private": false,
-        "run_as_system": true
-    },
-    {
-        "name": "UploadBooksTo_AWS_S3",
-        "private": true
-    },
-    {
-        "name": "xmlParserFlibusta",
-        "private": true,
-        "run_as_system": true,
-        "disable_arg_logs": true
-    },
-    {
-        "name": "UpdateWeekList",
-        "private": true
-    },
-    {
-        "name": "getRatingNComments",
-        "private": false,
-        "run_as_system": true
-    },
-    {
-        "name": "fetchBooks",
-        "private": true,
-        "can_evaluate": {}
-    },
-    {
         "name": "updateGitHubPagesDB",
         "private": true
     },
@@ -42,9 +9,48 @@
         "run_as_system": true
     },
     {
+        "name": "updateLibraryUrl",
+        "private": true
+    },
+    {
         "name": "mainFunctions",
         "private": false,
         "disable_arg_logs": true
+    },
+    {
+        "name": "getRatingNComments",
+        "private": false,
+        "run_as_system": true
+    },
+    {
+        "name": "Parser",
+        "private": false,
+        "run_as_system": true,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "UpdateWeekList",
+        "private": true
+    },
+    {
+        "name": "xmlParserFlibusta",
+        "private": true,
+        "run_as_system": true,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "Update24HourLists",
+        "private": true
+    },
+    {
+        "name": "getBooksFromList",
+        "private": true,
+        "can_evaluate": {}
+    },
+    {
+        "name": "getSaveFile",
+        "private": false,
+        "run_as_system": true
     },
     {
         "name": "test",
@@ -52,16 +58,16 @@
         "disable_arg_logs": true
     },
     {
-        "name": "UploadListsTo_AWS_S3",
-        "private": true
-    },
-    {
-        "name": "updateLibraryUrl",
-        "private": true
-    },
-    {
-        "name": "getBooksFromList",
+        "name": "fetchBooks",
         "private": true,
         "can_evaluate": {}
+    },
+    {
+        "name": "UploadBooksTo_AWS_S3",
+        "private": true
+    },
+    {
+        "name": "UploadListsTo_AWS_S3",
+        "private": true
     }
 ]

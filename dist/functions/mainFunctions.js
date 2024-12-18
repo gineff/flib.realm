@@ -7,16 +7,6 @@ const getOpds = async (url) => {
   return response.body.text();
 };
 
-const fillGenres = (books) => {
-  if (!books.length) return books;
-  const genresEntries = context.values.get("genres");
-  const genres = new Map(genresEntries);
-  books.forEach(book => {
-    book.genres = book.genre.length ? book.genre.map((el) => genres.get(el)) : [];
-  })
-  return books;
-};
-
 const xmlParser = (text) => context.functions.execute("xmlParserFlibusta", text);
 
 const htmlParser = (type, text) => {
@@ -76,7 +66,6 @@ exports = () => ({
   htmlParser,
   getLibrary,
   aws,
-  fillGenres,
   getLibraryUrl,
   getBooksNotInDb,
 });

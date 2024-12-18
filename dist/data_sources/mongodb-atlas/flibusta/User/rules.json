@@ -1,6 +1,6 @@
 {
-    "collection": "User",
     "database": "flibusta",
+    "collection": "User",
     "roles": [
         {
             "name": "default",

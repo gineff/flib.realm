@@ -1,15 +1,15 @@
 {
-    "collection": "Books",
     "database": "flibusta",
+    "collection": "Books",
     "roles": [
         {
             "name": "default",
             "apply_when": {},
-            "read": true,
-            "write": false,
             "insert": false,
             "delete": false,
             "search": true,
+            "read": true,
+            "write": false,
             "additional_fields": {}
         }
     ]

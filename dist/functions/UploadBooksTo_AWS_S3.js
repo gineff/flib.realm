@@ -1,79 +1,154 @@
-/* eslint-disable no-param-reassign */
+const bucket = 'flib.s3'
+const libUrl = 'http://flibusta.is'
+const proxyImageUrl = 'https://images.weserv.nl/?url='
+
+async function isS3KeyExists(key) {
+  const url = `https://hb.bizmrg.com/flib.s3/${key}`
+  const res = await context.http.head({ url })
+  return res.statusCode === 200
+}
+
+const initStream = _id => {
+  const axios = require('axios').default
+  const stream = require('stream')
+  let fb2FileName
+  return {
+    getFb2FileName: () => fb2FileName,
+    configureParams: async (url, key) => {
+      const pass = new stream.PassThrough()
+      let response,
+        fb2FileName,
+        Key = key
+      try {
+        response = await axios.get(url, { responseType: 'stream' })
+        response.data.pipe(pass)
+      } catch (e) {
+        console.log(e)
+        return
+      }
+
+      const ContentType = response.headers['content-type'] || 'octet-stream'
+      if (!Key) {
+        fb2FileName = response.headers['content-disposition']
+          ?.split('=')[1]
+          ?.replace(/\"/g, '')
+        Key = `${_id}/${fb2FileName}`
+      }
+
+      return { Bucket: bucket, Key, ContentType, Body: pass }
+    },
+  }
+}
+
+const getFb2Url = downloads =>
+  downloads?.find(el => el.type === 'application/fb2+zip')?.href
+
+const initAWSUploader = (fullDocument, clientS3) => {
+  const { _id, image, downloads } = fullDocument
+
+  const streamInstance = initStream(_id)
+
+  const uploadFb2Attachment = async () => {
+    const fb2AttachmentUrl = getFb2Url(downloads)
+    if (!fb2AttachmentUrl) {
+      return
+    }
+    const url = `${libUrl}${fb2AttachmentUrl}`
+    const params = await streamInstance.configureParams(url)
+    fullDocument.fb2FileName = streamInstance.getFb2FileName()
+    clientS3.upload(params, (err, data) => {
+      if (err) {
+        console.log('fb2 stream error', err)
+      }
+    })
+  }
+
+  const uploadBookJson = async () => {
+    params = {
+      Bucket: bucket,
+      Key: `${_id}/book.json`,
+      ContentType: 'application/json',
+      Body: JSON.stringify(fullDocument),
+    }
+    clientS3.upload(params, (err, data) => {
+      if (err) {
+        console.log('book.json error', err)
+      }
+    })
+  }
+
+  const uploadImages = async h => {
+    if (!image) {
+      return
+    }
+    const imageKey = `${_id}/${h}-cover.jpg`
+    const url = `${proxyImageUrl}${libUrl}${image}&h=${h}`
+    const params = await streamInstance.configureParams(url, imageKey)
+    clientS3.upload(params, (err, data) => {
+      if (err) {
+        console.log('image stream error', err)
+      }
+    })
+  }
+  return { uploadFb2Attachment, uploadBookJson, uploadImages }
+}
+
 exports = async function uploadBooks(changeEvent) {
-  const axios = require("axios").default;
-  const stream = require("stream");
+  const Books = context.services
+    .get('mongodb-atlas')
+    .db('flibusta')
+    .collection('Books')
+  const { fullDocument, operationType, updateDescription = {} } = changeEvent
+  const { _id, fb2FileName, expires, image } = fullDocument
 
-  const { aws, getLibraryUrl } = context.functions.execute("mainFunctions");
-  const Books = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
+  const { aws } = context.functions.execute('mainFunctions')
+  const clientS3 = await aws()
+  const loader = initAWSUploader(fullDocument, clientS3)
 
+  const { updatedFields } = updateDescription || {}
+  if (operationType === 'update' && updatedFields?.expires) {
+    const objects = [
+      ...(fb2FileName ? [{ key: fb2FileName }] : []),
+      { key: 'book.json' },
+      ...(image ? [{ key: '167-cover.jpg' }, { key: '500-cover.jpg' }] : []),
+    ]
 
-  let fb2FileName;
-  let { fullDocument } = changeEvent;
-  fullDocument = fullDocument || (await Books.findOne({ _id: new BSON.ObjectId(changeEvent) }));
-  const { _id, image, downloads } = fullDocument;
-  const s3 = await aws();
-  const libUrl = await getLibraryUrl({ _id: 1 });
-  const proxyImageUrl = "https://images.weserv.nl/?url=";
-
-  const uploadStream = async (url, Key) => {
-    const pass = new stream.PassThrough();
-    let response;
-    try {
-      response = await axios.get(url, { responseType: "stream" });
-      response.data.pipe(pass);
-    } catch (e) {
-      console.log(e);
+    const uploadFunctions = {
+      'book.json': loader.uploadBookJson,
+      '167-cover.jpg': loader.uploadImages.bind(null, '167'),
+      '500-cover.jpg': loader.uploadImages.bind(null, '500'),
     }
 
-    const ContentType = response.headers["content-type"] || "octet-stream";
-    // Key при загрузке файла fb2
-    if (!Key) {
-      // eslint-disable-next-line no-useless-escape
-      fb2FileName = response.headers["content-disposition"]?.split("=")[1]?.replace(/\"/g, "");
-      Key = `${_id}/${fb2FileName}`;
-    }
+    for (const object of objects) {
+      const { key } = object
+      const params = {
+        Bucket: bucket,
+        CopySource: `${bucket}/${_id}/${key}`,
+        Key: `${_id}/${key}`,
+        MetadataDirective: 'REPLACE',
+        Expires: expires,
+      }
 
-    const params = { Bucket: "flib.s3", Key, ContentType, Body: pass };
-
-    await s3.upload(params, (err, data) => {
-      console.log("stream error", err);
-      console.log(data?.Location);
-    });
-  };
-
-  if (downloads) {
-    const href = downloads.filter((el) => el.type === "application/fb2+zip")[0]?.href;
-    if (href) {
-      const url = `http://${libUrl}${href}`;
-      await uploadStream(url);
-    }
-  }
-
-  if (fb2FileName) {
-    fullDocument.fb2FileName = fb2FileName;
-  }
-
-  await s3.upload(
-    { Bucket: "flib.s3", Key: `${_id}/book.json`, ContentType: "application/json", Body: JSON.stringify(fullDocument) },
-    (err, data) => {
-      console.log("book", err);
-      console.log(data?.Location);
-    }
-  );
-
-  const results = [];
-  if (image) {
-    const imageName = image.split("/")[4];
-    const imageHeights = [167, 500];
-    for (const h of imageHeights) {
-      const url = `${proxyImageUrl}http://${libUrl}${image}&h=${h}`;
-      const Key = `${_id}/${h}-${imageName}`;
-      results.push(uploadStream(url, Key));
+      if (await isS3KeyExists(`${_id}/${key}`)) {
+        clientS3.copyObject(params, err => {
+          if (err) {
+            console.log(`Error copying object ${key}`, err)
+          }
+        })
+      } else {
+        const uploadFunction =
+          uploadFunctions[key] ?? loader.uploadFb2Attachment
+        await uploadFunction()
+      }
     }
   }
-  await Promise.all(results);
 
-  const update = fb2FileName ? { s3: true, fb2FileName } : { s3: true };
-
-  Books.updateOne({ _id }, { $set: update });
-};
+  if (operationType === 'insert') {
+    await loader.uploadFb2Attachment()
+    await loader.uploadBookJson()
+    await loader.uploadImages('167')
+    await loader.uploadImages('500')
+    const { fb2FileName } = fullDocument
+    Books.updateOne({ _id }, { $set: { s3: true, fb2FileName } })
+  }
+}

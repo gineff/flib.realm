@@ -1,25 +1,25 @@
 {
-    "id": "62fd32245d69a4ba430d0d5f",
     "name": "UploadListsTo_AWS_S3",
     "type": "DATABASE",
+    "disabled": true,
     "config": {
+        "collection": "Lists",
+        "database": "flibusta",
+        "full_document": true,
+        "full_document_before_change": false,
+        "match": {},
+        "maximum_throughput": false,
         "operation_types": [
             "INSERT",
             "UPDATE",
             "REPLACE"
         ],
-        "database": "flibusta",
-        "collection": "Lists",
-        "service_name": "mongodb-atlas",
-        "match": {},
         "project": {},
-        "full_document": true,
-        "full_document_before_change": false,
-        "unordered": false,
+        "service_name": "mongodb-atlas",
         "skip_catchup_events": true,
-        "tolerate_resume_errors": false
+        "tolerate_resume_errors": false,
+        "unordered": false
     },
-    "disabled": false,
     "event_processors": {
         "FUNCTION": {
             "config": {

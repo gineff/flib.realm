@@ -1,12 +1,11 @@
 {
-    "id": "62fac5b63abe9871234f72c4",
     "name": "checkSiteSratusUpdateUrl",
     "type": "SCHEDULED",
+    "disabled": false,
     "config": {
         "schedule": "57 */1 * * *",
         "skip_catchup_events": false
     },
-    "disabled": false,
     "event_processors": {
         "FUNCTION": {
             "config": {

@@ -1,12 +1,11 @@
 {
-    "id": "6114b3ff2ec400f6b52cea3b",
     "name": "fetchLib",
     "type": "SCHEDULED",
+    "disabled": false,
     "config": {
         "schedule": "0 */1 * * *",
         "skip_catchup_events": false
     },
-    "disabled": false,
     "event_processors": {
         "FUNCTION": {
             "config": {
