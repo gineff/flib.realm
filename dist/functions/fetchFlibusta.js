@@ -1,11 +1,12 @@
-/* eslint-disable no-await-in-loop */
 exports = async () => {
   const { getText, xmlParser } = context.functions.execute("mainFunctions");
   const Books = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
 
+  const getUrl = (page) => `https://flibusta.is/opds/new/${page}/new`;
+
   async function* fetchBooks() {
     let page = 0;
-    let url = `https://flibusta.is/opds/new/${page}/new`;
+    let url = getUrl(page);
 
     while (url) {
       const xml = await getText(fetchUrl);
@@ -15,7 +16,7 @@ exports = async () => {
       }
 
       page += 1;
-      url = `https://flibusta.is/opds/new/${page}/new`;
+      url = getUrl(page);
     }
   }
 
