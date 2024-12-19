@@ -3,7 +3,7 @@ const getFb2Url = (downloads) => downloads?.find((el) => el.type === "applicatio
 exports = async function uploadBooks(changeEvent) {
   const Books = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
   const { fullDocument, operationType, updateDescription = {} } = changeEvent;
-  const { _id, image } = fullDocument;
+  const { _id, image, downloads } = fullDocument;
 
   const { aws, Params, FileStreamParams, ImageStreamParams } = context.functions.execute("aws");
   const axios = require("axios").default;
