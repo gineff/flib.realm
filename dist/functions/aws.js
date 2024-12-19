@@ -1,7 +1,7 @@
 class Params {
   constructor({ catalog = "", fileName = "", body = "", contentType = "text/plain" }) {
-    this.prefix = "core";
-    this.Bucket = "flib.s3";
+    this.Bucket = "flib.core";
+    this.prefix = "books";
     this.Body = body;
     this.ContentType = contentType;
     this.catalog = catalog;
@@ -78,6 +78,7 @@ class ImageStreamParams extends StreamParams {
 class FileStreamParams extends StreamParams {
   constructor(options) {
     super(options);
+    this.Bucket = "flib.files";
     this.prefix = "fb2";
   }
   get fileName() {
