@@ -17,7 +17,7 @@ exports = async function uploadBooks(changeEvent) {
         fileName: "book.json",
         contentType: "application/json",
         body: JSON.stringify(fullDocument),
-      }).values
+      }).values, (err,data)=> err && console.log(err, JSON.stringify(data))
     );
 
     if (image) {
@@ -30,7 +30,7 @@ exports = async function uploadBooks(changeEvent) {
             stream,
             url: image,
           }).pipe()
-        ).values
+        ).values, (err,data)=> err && console.log(err, JSON.stringify(data))
       );
 
       clientS3.upload(
@@ -42,8 +42,8 @@ exports = async function uploadBooks(changeEvent) {
             stream,
             url: image,
           }).pipe()
-        ).values
-      );
+        ).values, (err,data)=> err && console.log(err, JSON.stringify(data))
+      )
     }
 
     const fb2AttachmentUrl = getFb2Url(downloads);
@@ -54,12 +54,12 @@ exports = async function uploadBooks(changeEvent) {
         catalog: _id,
         axios,
         stream,
-        url: getFb2Url(downloads),
+        url: fb2AttachmentUrl,
       }).pipe();
 
-      fb2FileName = fb2.fileName();
+      fb2FileName = fb2.fileName;
 
-      clientS3.upload(fb2.values);
+      clientS3.upload(fb2.values, (err,data)=> err && console.log(err, JSON.stringify(data)));
     }
 
     Books.updateOne({ _id }, { $set: { s3: true, ...(fb2FileName ? { fb2FileName } : {}) } });

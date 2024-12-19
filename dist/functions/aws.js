@@ -7,6 +7,7 @@ class Params {
     this.ContentType = contentType;
     this.catalog = catalog;
     this.fileName = fileName;
+    this.libUrl = "http://flibusta.is";
   }
 
   get values() {
@@ -67,9 +68,8 @@ class ImageStreamParams extends StreamParams {
     }
     this.height = height;
     const proxy = "https://images.weserv.nl/?url=";
-    const libUrl = "http://flibusta.is";
 
-    const url = `${proxy}${encodeURIComponent(libUrl + image)}&h=${height}`;
+    const url = `${proxy}${encodeURIComponent(this.libUrl + image)}&h=${height}`;
     await super.initStream({ url, ...rest });
   }
 
@@ -82,6 +82,10 @@ class FileStreamParams extends StreamParams {
   constructor(options) {
     super(options);
     this.prefix = "fb2";
+  }
+  async initStream({ url, ...rest }) {
+    const fileUrl = this.libUrl + url;
+    await super.initStream({ url: fileUrl, ...rest });
   }
   get fileName() {
     const disposition = this.response?.headers["content-disposition"];
