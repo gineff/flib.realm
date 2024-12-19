@@ -3,21 +3,25 @@ const getFb2Url = (downloads) => downloads?.find((el) => el.type === "applicatio
 exports = async function uploadBooks(changeEvent) {
   const Books = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
   const { fullDocument, operationType, updateDescription = {} } = changeEvent;
-  const { _id, fb2FileName, expires, image } = fullDocument;
+  const { _id, image } = fullDocument;
 
   const { aws, Params, FileStreamParams, ImageStreamParams } = context.functions.execute("aws");
   const axios = require("axios").default;
   const stream = require("stream");
   const clientS3 = await aws();
 
-  if (operationType === "insert") {
+  if (
+    operationType === "insert" ||
+    (operationType === "update" && updateDescription?.updatedFields?.expires)
+  ) {
     clientS3.upload(
       new Params({
         catalog: _id,
         fileName: "book.json",
         contentType: "application/json",
         body: JSON.stringify(fullDocument),
-      }).values, (err,data)=> err && console.log(err, JSON.stringify(data))
+      }).values,
+      (err, data) => err && console.log(err, JSON.stringify(data))
     );
 
     if (image) {
@@ -30,7 +34,8 @@ exports = async function uploadBooks(changeEvent) {
             stream,
             url: image,
           }).pipe()
-        ).values, (err,data)=> err && console.log(err, JSON.stringify(data))
+        ).values,
+        (err, data) => err && console.log(err, JSON.stringify(data))
       );
 
       clientS3.upload(
@@ -42,8 +47,9 @@ exports = async function uploadBooks(changeEvent) {
             stream,
             url: image,
           }).pipe()
-        ).values, (err,data)=> err && console.log(err, JSON.stringify(data))
-      )
+        ).values,
+        (err, data) => err && console.log(err, JSON.stringify(data))
+      );
     }
 
     const fb2AttachmentUrl = getFb2Url(downloads);
@@ -59,7 +65,7 @@ exports = async function uploadBooks(changeEvent) {
 
       fb2FileName = fb2.fileName;
 
-      clientS3.upload(fb2.values, (err,data)=> err && console.log(err, JSON.stringify(data)));
+      clientS3.upload(fb2.values, (err, data) => err && console.log(err, JSON.stringify(data)));
     }
 
     Books.updateOne({ _id }, { $set: { s3: true, ...(fb2FileName ? { fb2FileName } : {}) } });
