@@ -1,6 +1,7 @@
 class Params {
   constructor({ catalog = "", fileName = "", body = "", contentType = "text/plain" }) {
-    this.Bucket = "flib.core";
+    this.ACL = "public-read";
+    this.Bucket = "flib.s3";
     this.prefix = "books";
     this.Body = body;
     this.ContentType = contentType;
@@ -14,6 +15,7 @@ class Params {
       Key: `${this.prefix}/${this.catalog}/${this.fileName}`,
       ContentType: this.ContentType,
       Body: this.Body,
+      ACL: this.ACL,
     };
   }
 }
@@ -54,6 +56,7 @@ class StreamParams extends Params {
       console.error(`Failed to pipe data from URL: ${this.url}`, error);
       throw error;
     }
+    return this;
   }
 }
 
@@ -78,7 +81,6 @@ class ImageStreamParams extends StreamParams {
 class FileStreamParams extends StreamParams {
   constructor(options) {
     super(options);
-    this.Bucket = "flib.files";
     this.prefix = "fb2";
   }
   get fileName() {
