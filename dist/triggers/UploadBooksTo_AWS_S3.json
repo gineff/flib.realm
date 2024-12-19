@@ -8,6 +8,7 @@
         "full_document": true,
         "full_document_before_change": true,
         "match": {},
+        "maximum_throughput": false,
         "operation_types": [
             "INSERT",
             "UPDATE"
@@ -21,7 +22,7 @@
     "event_processors": {
         "FUNCTION": {
             "config": {
-                "function_name": "UploadBooksTo_AWS_S3"
+                "function_name": "uploadS3"
             }
         }
     }
