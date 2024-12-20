@@ -1,7 +1,7 @@
 {
     "name": "fetchLib",
     "type": "SCHEDULED",
-    "disabled": true,
+    "disabled": false,
     "config": {
         "schedule": "0 */1 * * *",
         "skip_catchup_events": false
