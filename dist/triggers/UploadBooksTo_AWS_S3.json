@@ -22,7 +22,7 @@
     "event_processors": {
         "FUNCTION": {
             "config": {
-                "function_name": "uploadS3"
+                "function_name": "uploadBooksToS3"
             }
         }
     }

@@ -1,7 +1,7 @@
 {
     "name": "checkSiteSratusUpdateUrl",
     "type": "SCHEDULED",
-    "disabled": false,
+    "disabled": true,
     "config": {
         "schedule": "57 */1 * * *",
         "skip_catchup_events": false
