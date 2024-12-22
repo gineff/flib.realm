@@ -32,12 +32,12 @@ exports = async function uploadBooks(changeEvent) {
     if (image) {
       upload(
         clientS3,
-        await new ImageStreamParams(Object.assign(options, { height: 167, url: image })).pipe()
+        (await new ImageStreamParams(Object.assign(options, { height: 167, url: image })).pipe())
           .values
       );
       upload(
         clientS3,
-        await new ImageStreamParams(Object.assign(options, { height: 700, url: image })).pipe()
+        (await new ImageStreamParams(Object.assign(options, { height: 700, url: image })).pipe())
           .values
       );
     }
@@ -47,7 +47,7 @@ exports = async function uploadBooks(changeEvent) {
     if ((fb2AttachmentUrl = getFb2Url(downloads))) {
       upload(
         clientS3,
-        await new FileStreamParams(Object.assign(options, { url: fb2AttachmentUrl })).pipe().values
+        (await new FileStreamParams(Object.assign(options, { url: fb2AttachmentUrl })).pipe()).values
       );
     }
   }
