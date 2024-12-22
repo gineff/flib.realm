@@ -69,5 +69,9 @@
     {
         "name": "UploadListsTo_AWS_S3",
         "private": true
+    },
+    {
+      "name": "updateGenres",
+      "private": true
     }
 ]
