@@ -1,6 +1,6 @@
 function addDays(days) {
   const date = new Date();
-  date.setDate(now.getDate() + days);
+  date.setDate(date.getDate() + days);
   return date;
 }
 
