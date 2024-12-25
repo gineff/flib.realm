@@ -35,12 +35,12 @@ exports = async () => {
 
       if (!existingBook) {
         await Books.insertOne(book);
-        console.log(`Добавлена книга: ${book.title}`);
+        console.log(`Добавлена книга: ${book.bid}`);
       } else {
         break;
       }
     } catch (error) {
-      console.error(`Ошибка при обработке книги "${book.title}":`, error);
+      console.error(`Ошибка при обработке книги "${book.bid}":`, error);
       break;
     }
   }

@@ -1,8 +1,14 @@
 class Params {
-  constructor({ catalog = "", fileName = "", body = "", contentType = "text/plain" }) {
+  constructor({
+    prefix = "books",
+    catalog = "",
+    fileName = "",
+    body = "",
+    contentType = "text/plain",
+  }) {
     this.ACL = "public-read";
     this.Bucket = "flib.s3";
-    this.prefix = "books";
+    this.prefix = prefix;
     this.Body = body;
     this.ContentType = contentType;
     this.catalog = catalog;
@@ -13,7 +19,7 @@ class Params {
   get values() {
     return {
       Bucket: this.Bucket,
-      Key: `${this.prefix}/${this.catalog}/${this.fileName}`,
+      Key: [this.prefix, this.catalog, this.fileName].filter(Boolean).join("/"),
       ContentType: this.ContentType,
       Body: this.Body,
       ACL: this.ACL,

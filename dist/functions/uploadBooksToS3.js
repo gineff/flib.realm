@@ -1,7 +1,7 @@
 const getFb2Url = (downloads) => downloads?.find((el) => el.type === "application/fb2+zip")?.href;
 
 const upload = (s3, params) => {
-  s3.upload(params, (err, data) => err && console.log(err, JSON.stringify(data)));
+  s3.upload(params, (err) => err && console.log(err, JSON.stringify(err)));
 };
 
 exports = async function uploadBooks(changeEvent) {
@@ -22,6 +22,7 @@ exports = async function uploadBooks(changeEvent) {
     upload(
       clientS3,
       new Params({
+        prefix: "books",
         catalog: _id,
         fileName: "book.json",
         contentType: "application/json",
@@ -30,16 +31,20 @@ exports = async function uploadBooks(changeEvent) {
     );
 
     if (image) {
-      upload(
-        clientS3,
-        (await new ImageStreamParams(Object.assign(options, { height: 167, url: image })).pipe())
-          .values
-      );
-      upload(
-        clientS3,
-        (await new ImageStreamParams(Object.assign(options, { height: 700, url: image })).pipe())
-          .values
-      );
+      try {
+        upload(
+          clientS3,
+          (await new ImageStreamParams(Object.assign(options, { height: 167, url: image })).pipe())
+            .values
+        );
+        upload(
+          clientS3,
+          (await new ImageStreamParams(Object.assign(options, { height: 700, url: image })).pipe())
+            .values
+        );
+      } catch (e) {
+        console.log(e);
+      }
     }
 
     let fb2AttachmentUrl;
@@ -47,7 +52,8 @@ exports = async function uploadBooks(changeEvent) {
     if ((fb2AttachmentUrl = getFb2Url(downloads))) {
       upload(
         clientS3,
-        (await new FileStreamParams(Object.assign(options, { url: fb2AttachmentUrl })).pipe()).values
+        (await new FileStreamParams(Object.assign(options, { url: fb2AttachmentUrl })).pipe())
+          .values
       );
     }
   }
