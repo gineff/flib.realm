@@ -1,3 +1,9 @@
+function addDays(days) {
+  const now = new Date();
+  result.setDate(now.getDate() + days);
+  return result;
+}
+
 class Params {
   constructor({
     prefix = "books",
@@ -14,6 +20,7 @@ class Params {
     this.catalog = catalog;
     this.fileName = fileName;
     this.libUrl = "http://flibusta.is";
+    this.expires = addDays(365).getTime();
   }
 
   get values() {
@@ -23,6 +30,7 @@ class Params {
       ContentType: this.ContentType,
       Body: this.Body,
       ACL: this.ACL,
+      Expires: this.expires,
     };
   }
 }
@@ -88,6 +96,7 @@ class FileStreamParams extends StreamParams {
   constructor(options) {
     super(options);
     this.prefix = "fb2";
+    this.expires = addDays(30).getTime();
   }
   async initStream({ url, ...rest }) {
     const fileUrl = this.libUrl + url;
@@ -112,6 +121,16 @@ const aws = async () => {
   };
   return new AWS.S3({ endpoint: ep, apiVersion: "2006-03-01", credentials });
 };
+
+class S3 {
+  async init() {
+    this._client = await aws();
+    return this;
+  }
+  async upload(params) {
+    await this._client.upload(params, (err) => err && console.log(err, JSON.stringify(err)));
+  }
+}
 
 exports = () => ({
   aws,

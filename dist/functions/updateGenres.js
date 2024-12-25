@@ -1,70 +1,93 @@
+const uploadGenres = async (clientS3, genres) => {
+  await clientS3.upload({
+    Bucket: "flib.s3",
+    Key: "data/genres.json",
+    ContentType: "application/json",
+    Body: JSON.stringify({ data: genres }),
+  });
+};
 
-exports = async () => {
+const updateSettings = async () => {
+  const Settings = context.services.get("mongodb-atlas").db("flibusta").collection("Settings");
+  const updatedSettings = await Settings.findOneAndUpdate(
+    { _id: "general" },
+    { $set: { genresUpdateDate: new Date() } },
+    {
+      upsert: true,
+      returnDocument: "after",
+    }
+  );
+  return updatedSettings;
+};
+
+const uploadSettings = async (clientS3, settings) => {
+  await clientS3.upload({
+    Bucket: "flib.s3",
+    Key: "data/settings.json",
+    ContentType: "application/json",
+    Body: JSON.stringify({ data: settings }),
+  });
+};
+
+const getSQL = async () => {
   const axios = require("axios").default;
   const zlib = require("node:zlib");
-
-  const Genres = context.services.get("mongodb-atlas").db("flibusta").collection("Genres");
   const url = "https://flibusta.is/sql/lib.libgenrelist.sql.gz";
 
   const response = await axios.get(url, { responseType: "arraybuffer" });
   const compressedData = response.data;
   const decompressedData = zlib.gunzipSync(compressedData).toString("utf8");
-  const matches = decompressedData.match(/VALUES\s*\((.*?)\);/s);
+  return decompressedData;
+};
 
+const parseSQL = (sql) => {
+  const matches = sql.match(/VALUES\s*\((.*?)\);/s);
   if (!matches) {
-    console.log("INSERT INTO строки не найдены.");
-    return;
+    throw new Error("INSERT INTO строки не найдены.");
   }
-  const genresMap = new Map();
-  matches[1].split("),(").forEach((item) => {
+
+  const genres = matches[1].split("),(").map((item) => {
     const [GenreId, GenreCode, GenreDesc, GenreMeta] = item
       .split(",")
       .map((val) => val.trim().replace(/^'|'$/g, ""));
-    const key = `${GenreId}-${GenreDesc}`;
-    genresMap.set(key, {
+    return {
       GenreId: parseInt(GenreId),
       GenreCode,
       GenreDesc,
       GenreMeta,
-    });
+    };
   });
+  return genres;
+};
 
-  
-  const bulkOps = [];
+class S3 {
+  async init() {
+    const { aws } = context.functions.execute("aws");
+    this._client = await aws();
+    return this;
+  }
+  async upload(params) {
+    await this._client.upload(params, (err) => err && console.log(err, JSON.stringify(err)));
+  }
+}
 
-  bulkOps.push({
-    updateMany: {
-      filter: {}, 
-      update: { $set: { status: "obsolete" } },
-    },
-  });
-  
-  genresMap.forEach((value) => {
-    const { GenreId, GenreDesc, ...rest } = value;
-    bulkOps.push({
-      updateOne: {
-        filter: { GenreId, GenreDesc }, 
-        update: { $set: { ...rest, status: "active" } },
-        upsert: true, // Добавляем запись, если не найдена
-      },
-    });
-  });
-  
-  await Genres.bulkWrite(bulkOps);
-  
+exports = async () => {
+  const Genres = context.services.get("mongodb-atlas").db("flibusta").collection("Genres");
+  const s3 = await new S3().init();
 
-  const { aws, Params } = context.functions.execute("aws");
-  const clientS3 = await aws();
-  const genres = await Genres.find({ status: { $ne: "obsolete" } }).toArray();
+  try {
+    const sql = await getSQL();
+    const genres = parseSQL(sql);
 
-  await clientS3.upload(
-    {
-      Bucket: "flib.s3",
-      Key: "data/genres.json",
-      ContentType: "application/json",
-      Body: JSON.stringify({ data: genres }),
-    },
-    (err) => err && console.log(err, JSON.stringify(err))
-  );
+    await Genres.deleteMany({});
+    await Genres.insertMany(genres);
 
+    await uploadGenres(s3, genres);
+    const settings = await updateSettings();
+    await uploadSettings(s3, settings);
+
+    return genres;
+  } catch (e) {
+    console.log(e);
+  }
 };
