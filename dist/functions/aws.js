@@ -1,7 +1,7 @@
 function addDays(days) {
-  const now = new Date();
-  result.setDate(now.getDate() + days);
-  return result;
+  const date = new Date();
+  date.setDate(now.getDate() + days);
+  return date;
 }
 
 class Params {
