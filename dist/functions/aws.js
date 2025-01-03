@@ -134,6 +134,7 @@ class S3 {
 
 exports = () => ({
   aws,
+  S3,
   Params,
   StreamParams,
   FileStreamParams,
