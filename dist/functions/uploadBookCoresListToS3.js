@@ -14,7 +14,7 @@ const getCurrentPage = async () => {
   }
 };
 
-const getBooksEarlierThan = async (bookCursor) => {
+const getBooks = async ({ cursor, limit, sort}) => {
 
   if(!bookCursor) return []
 
@@ -22,7 +22,7 @@ const getBooksEarlierThan = async (bookCursor) => {
   return await Books.aggregate([
     {
       $match: {
-        _id: { $gt: BSON.ObjectId(bookCursor._id) },
+        _id: { [sort === "DESC" ? '$gt' : '$lt']: BSON.ObjectId(cursor._id) },
       },
     },
     {
@@ -52,6 +52,7 @@ const getBooksEarlierThan = async (bookCursor) => {
         },
       },
     },
+    ...(limit ? [{ $limit: limit }] : []),
   ]);
 };
 
@@ -78,9 +79,15 @@ const uploadPage = async (data, next, isLastPage) => {
 };
 
 
-exports = async () => {
+exports = async ({sort = "DESC", limit}) => {
   let { data: page, next } = getCurrentPage();
-  const books = await getBooksEarlierThan(data && data[0]);
+  const options = {
+    cursor: sort === "DESC" ? page.at(0) : page.at(-1),
+    limit,
+    sort,
+  }
+  //const books = await getBooksEarlierThan(data && data[0]);
+  const books = await getBooks(options);
 
   while(true) {
     if (page.length >= MAX_PAGE_LENGTH) {
