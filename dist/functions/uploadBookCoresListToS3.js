@@ -1,8 +1,10 @@
 const s3 = "http://flib.s3.hb.ru-msk.vkcloud-storage.ru";
+const currentPageName = "1_new";
+const MAX_PAGE_LENGTH = 100;
 
-const getLastPage = async () => {
+const getCurrentPage = async () => {
   const axios = require("axios").default;
-  const url = `${s3}/lists/1_new.json`;
+  const url = `${s3}/lists/${currentPageName}.json`;
   try {
     const list = await axios.get(url, { responseType: "json" });
     return list.data;
@@ -12,12 +14,15 @@ const getLastPage = async () => {
   }
 };
 
-const getBooks = async (_id) => {
+const getBooksEarlierThan = async (bookCursor) => {
+
+  if(!bookCursor) return []
+
   const Books = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
   return await Books.aggregate([
     {
       $match: {
-        _id: { $gt: BSON.ObjectId(_id) },
+        _id: { $gt: BSON.ObjectId(bookCursor._id) },
       },
     },
     {
@@ -57,14 +62,14 @@ function generateSimpleUID() {
     .slice(0, 20);
 }
 
-const uploadPage = async (data, next) => {
+const uploadPage = async (data, next, isLastPage) => {
   const { S3 } = context.functions.execute("aws");
   const s3 = await new S3().init();
-  const uid = generateSimpleUID();
+  const uid = isLastPage ? currentPageName : generateSimpleUID();
 
   await s3.upload({
     Bucket: "flib.s3",
-    Key: `data/lists/1_new/${uid}.json`,
+    Key: `data/lists/${uid}.json`,
     ContentType: "application/json",
     Body: JSON.stringify({ data, next }),
   });
@@ -72,26 +77,18 @@ const uploadPage = async (data, next) => {
   return `${uid}.json`;
 };
 
+
 exports = async () => {
-  const PAGE_LENGTH = 100;
+  let { data: page, next } = getCurrentPage();
+  const books = await getBooksEarlierThan(data && data[0]);
 
-  let { data: page, next } = getLastPage();
-  const lastBook = data[0];
-  const lastBookId = lastBook ? lastBook._id : null;
-  const books = await getBooks(lastBookId);
-
-  // last page already contains PAGE_LENGTH books
-  if (page.length >= PAGE_LENGTH && books.hasNext()) {
-    next = uploadPage(page, next);
-    page.length = 0;
-  }
-
-  for await (const book of books) {
-    page.push(book);
-    //ToDo upload 1_new.json
-    if (page.length >= PAGE_LENGTH || !books.hasNext()) {
-      next = uploadPage(page, next);
-      page.length = 0;
+  while(true) {
+    if (page.length >= MAX_PAGE_LENGTH) {
+      next = await uploadPage(page, next, books.hasNext());
+      page = [];
     }
+    if (!books.hasNext()) break;
+
+    page.push(books.next());
   }
 };
