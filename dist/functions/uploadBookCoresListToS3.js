@@ -1,28 +1,25 @@
-const s3 = "http://flib.s3.hb.ru-msk.vkcloud-storage.ru";
-const currentPageName = "1_new";
+const s3Url = "http://flib.s3.hb.ru-msk.vkcloud-storage.ru";
 const MAX_PAGE_LENGTH = 100;
 
-const getCurrentPage = async () => {
+const fetchPage = async (pageName) => {
   const axios = require("axios").default;
-  const url = `${s3}/lists/${currentPageName}.json`;
+  const url = `${s3Url}/lists/${pageName}.json`;
   try {
-    const list = await axios.get(url, { responseType: "json" });
-    return list.data;
+    return await axios.get(url, { responseType: "json" });
   } catch (error) {
     console.log(error);
-    return [];
+    return { data: [], next: null };
   }
 };
 
-const getBooks = async ({ cursor, limit, sort}) => {
-
-  if(!bookCursor) return []
+const getBooks = async ({ cursor, limit, direction }) => {
+  if (!cursor) return [];
 
   const Books = context.services.get("mongodb-atlas").db("flibusta").collection("Books");
   return await Books.aggregate([
     {
       $match: {
-        _id: { [sort === "DESC" ? '$gt' : '$lt']: BSON.ObjectId(cursor._id) },
+        _id: { [direction === "before" ? "$gt" : "$lt"]: BSON.ObjectId(cursor._id) },
       },
     },
     {
@@ -56,46 +53,90 @@ const getBooks = async ({ cursor, limit, sort}) => {
   ]);
 };
 
-function generateSimpleUID() {
-  const data = `${new Date().toISOString()}-${Math.random()}`;
-  return btoa(data)
-    .replace(/[^a-zA-Z0-9]/g, "")
-    .slice(0, 20);
-}
-
-const uploadPage = async (data, next, isLastPage) => {
+const uploadPage = async (data, current, next) => {
   const { S3 } = context.functions.execute("aws");
   const s3 = await new S3().init();
-  const uid = isLastPage ? currentPageName : generateSimpleUID();
+  //const uid = isLastPage ? currentPageName : BSON.ObjectId();
 
   await s3.upload({
     Bucket: "flib.s3",
-    Key: `data/lists/${uid}.json`,
+    Key: `data/lists/${current}.json`,
     ContentType: "application/json",
     Body: JSON.stringify({ data, next }),
   });
 
-  return `${uid}.json`;
+  //return `${uid}.json`;
 };
 
-
-exports = async ({sort = "DESC", limit}) => {
-  let { data: page, next } = getCurrentPage();
-  const options = {
-    cursor: sort === "DESC" ? page.at(0) : page.at(-1),
-    limit,
-    sort,
+class Page {
+  constructor({ data = [], ...rest }) {
+    Object.assign(this, { data }, rest);
   }
-  //const books = await getBooksEarlierThan(data && data[0]);
+  async upload() {
+    this.s3.upload({
+      Bucket: "flib.s3",
+      Key: `data/lists/${this.name}.json`,
+      ContentType: "application/json",
+      Body: JSON.stringify({ data: this.data, next: this.next }),
+    });
+  }
+  get length() {
+    return this.data.length;
+  }
+  add(book) {
+    this.data.push(book);
+  }
+  at(index) {
+    return this.data.at(index);
+  }
+}
+
+initS3 = async () => {
+  const { S3 } = context.functions.execute("aws");
+  const s3 = await new S3().init();
+  return s3;
+};
+
+const turnPage = (direction, startPageName, isLastPage, prevPage) => {
+  if (direction === "before") {
+    return {
+      name: isLastPage ? startPageName : BSON.ObjectId(),
+      next: prevPage.name,
+    };
+  }
+  return {
+    name: prevPage.next,
+    next: isLastPage ? null : BSON.ObjectId(),
+  };
+};
+
+exports = async ({ direction = "before", limit, startName = "1_new" }) => {
+  const { data, next } = await fetchPage(startName);
+  let page = new Page({
+    data,
+    next: direction === "before" ? next : next ?? BSON.ObjectId(),
+    name: startName,
+    s3: await initS3(),
+  });
+
+  const options = {
+    cursor: direction === "before" ? page.at(0) : page.at(-1),
+    limit,
+    direction,
+  };
   const books = await getBooks(options);
 
-  while(true) {
+  while (true) {
     if (page.length >= MAX_PAGE_LENGTH) {
-      next = await uploadPage(page, next, books.hasNext());
-      page = [];
+      await page.upload();
+
+      page = new Page({
+        s3: page.s3,
+        ...turnPage(direction, startName, books.hasNext(), page),
+      });
     }
     if (!books.hasNext()) break;
 
-    page.push(books.next());
+    page.add(books.next());
   }
 };
