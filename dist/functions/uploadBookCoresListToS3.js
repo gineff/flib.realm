@@ -49,23 +49,9 @@ const getBooks = async ({ cursor, limit, direction }) => {
         },
       },
     },
+    { sort: { _id: direction === "before" ? 1 : -1 } },
     ...(limit ? [{ $limit: limit }] : []),
   ]);
-};
-
-const uploadPage = async (data, current, next) => {
-  const { S3 } = context.functions.execute("aws");
-  const s3 = await new S3().init();
-  //const uid = isLastPage ? currentPageName : BSON.ObjectId();
-
-  await s3.upload({
-    Bucket: "flib.s3",
-    Key: `data/lists/${current}.json`,
-    ContentType: "application/json",
-    Body: JSON.stringify({ data, next }),
-  });
-
-  //return `${uid}.json`;
 };
 
 class Page {
@@ -110,7 +96,7 @@ const turnPage = (direction, startPageName, isLastPage, prevPage) => {
   };
 };
 
-exports = async ({ direction = "before", limit, startName = "1_new" }) => {
+exports = async ({ direction = "before", limit = MAX_PAGE_LENGTH, startName = "1_new" }) => {
   const { data, next } = await fetchPage(startName);
   let page = new Page({
     data,
